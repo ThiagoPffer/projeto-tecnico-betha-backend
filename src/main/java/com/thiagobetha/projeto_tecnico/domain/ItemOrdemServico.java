@@ -6,6 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class ItemOrdemServico  implements Serializable{
@@ -14,17 +18,23 @@ public class ItemOrdemServico  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private String descricaoItem;
-	private String avaria;
 	
+	private String equipamento;
+	private String descricaoEquipamento;
+	private String avariaEquipamento;
+	
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name="ordemServico_id")
 	private OrdemServico ordemServico;
 
 	public ItemOrdemServico() {}
 	
-	public ItemOrdemServico(String descricaoItem, String avaria, OrdemServico ordemServico) {
+	public ItemOrdemServico(String equipamento, String descricaoEquipamento, String avariaEquipamento, OrdemServico ordemServico) {
 		super();
-		this.descricaoItem = descricaoItem;
-		this.avaria = avaria;
+		this.equipamento = equipamento;
+		this.descricaoEquipamento = descricaoEquipamento;
+		this.avariaEquipamento = avariaEquipamento;
 		this.ordemServico = ordemServico;
 	}
 
@@ -36,20 +46,28 @@ public class ItemOrdemServico  implements Serializable{
 		this.id = id;
 	}
 
+	public String getEquipamento() {
+		return equipamento;
+	}
+
+	public void setEquipamento(String equipamento) {
+		this.equipamento = equipamento;
+	}
+	
 	public String getDescricaoItem() {
-		return descricaoItem;
+		return descricaoEquipamento;
 	}
 
 	public void setDescricaoItem(String descricaoItem) {
-		this.descricaoItem = descricaoItem;
+		this.descricaoEquipamento = descricaoItem;
 	}
 
 	public String getAvaria() {
-		return avaria;
+		return avariaEquipamento;
 	}
 
 	public void setAvaria(String avaria) {
-		this.avaria = avaria;
+		this.avariaEquipamento = avaria;
 	}
 
 	public OrdemServico getOrdemServico() {

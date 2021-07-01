@@ -1,11 +1,15 @@
 package com.thiagobetha.projeto_tecnico.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import com.thiagobetha.projeto_tecnico.domain.enums.EstadoPagamento;
 import com.thiagobetha.projeto_tecnico.domain.enums.SituacaoOrdemServico;
@@ -19,12 +23,15 @@ public class OrdemServico implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	private Double valorOrcamento;
 	
 	private Integer situacao;
 	private Integer pagamento;
 	
 	private String cliente; //configurar, falta setar endereço
-	private String itens; //configurar
+	
+	@OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL)
+	private List<ItemOrdemServico> itens = new ArrayList<>();
 	
 	public OrdemServico() {}
 
@@ -67,14 +74,22 @@ public class OrdemServico implements Serializable{
 		this.cliente = cliente;
 	}
 
-	public String getItens() {
+	public List<ItemOrdemServico> getItens() {
 		return itens;
 	}
 
-	public void setItens(String itens) {
+	public void setItens(List<ItemOrdemServico> itens) {
 		this.itens = itens;
 	}
 
+	public Double getValorOrcamento() {
+		return valorOrcamento;
+	}
+
+	public void setValorOrcamento(Double valorOrcamento) {
+		this.valorOrcamento = valorOrcamento;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
