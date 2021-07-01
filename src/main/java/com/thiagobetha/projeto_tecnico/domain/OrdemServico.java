@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.thiagobetha.projeto_tecnico.domain.enums.EstadoPagamento;
 import com.thiagobetha.projeto_tecnico.domain.enums.SituacaoOrdemServico;
 
 //nao foram mapeados relacionalmente
@@ -18,18 +19,19 @@ public class OrdemServico implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	
 	private Integer situacao;
-
-	private String pagamento; //configurar cada classe depois
-	private String cliente; //falta setar endereço
-	private String itens;
+	private Integer pagamento;
+	
+	private String cliente; //configurar, falta setar endereço
+	private String itens; //configurar
 	
 	public OrdemServico() {}
 
-	public OrdemServico(SituacaoOrdemServico situacao, String pagamento, String cliente) {
+	public OrdemServico(SituacaoOrdemServico situacao, EstadoPagamento pagamento, String cliente) {
 		super();
 		this.situacao = (situacao == null) ? null : situacao.getCod();
-		this.pagamento = pagamento;
+		this.pagamento = (pagamento == null) ? null : pagamento.getCod();;
 		this.cliente = cliente;
 	}
 
@@ -49,12 +51,12 @@ public class OrdemServico implements Serializable{
 		this.situacao = situacao.getCod();
 	}
 
-	public String getPagamento() {
-		return pagamento;
+	public EstadoPagamento getPagamento() {
+		return EstadoPagamento.toEnum(pagamento);
 	}
 
-	public void setPagamento(String pagamento) {
-		this.pagamento = pagamento;
+	public void setPagamento(EstadoPagamento pagamento) {
+		this.pagamento = pagamento.getCod();
 	}
 
 	public String getCliente() {
