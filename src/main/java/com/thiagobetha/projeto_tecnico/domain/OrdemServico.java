@@ -1,6 +1,7 @@
 package com.thiagobetha.projeto_tecnico.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +15,6 @@ import javax.persistence.OneToMany;
 import com.thiagobetha.projeto_tecnico.domain.enums.EstadoPagamento;
 import com.thiagobetha.projeto_tecnico.domain.enums.SituacaoOrdemServico;
 
-//nao foram mapeados relacionalmente
-
 @Entity
 public class OrdemServico implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -23,7 +22,7 @@ public class OrdemServico implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	private Double valorOrcamento;
+	private BigDecimal valorTotal;
 	
 	private Integer situacao;
 	private Integer pagamento;
@@ -33,12 +32,15 @@ public class OrdemServico implements Serializable{
 	@OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL)
 	private List<ItemOrdemServico> itens = new ArrayList<>();
 	
-	public OrdemServico() {}
+	public OrdemServico() {
+		this.pagamento = 1;
+		this.situacao = 1;
+	}
 
-	public OrdemServico(SituacaoOrdemServico situacao, EstadoPagamento pagamento, String cliente) {
+	public OrdemServico(String cliente) {
 		super();
-		this.situacao = (situacao == null) ? null : situacao.getCod();
-		this.pagamento = (pagamento == null) ? null : pagamento.getCod();;
+		this.pagamento = 1;
+		this.situacao = 1;
 		this.cliente = cliente;
 	}
 
@@ -50,6 +52,13 @@ public class OrdemServico implements Serializable{
 		this.id = id;
 	}
 
+	public double getValorTotal() {		
+		for(ItemOrdemServico item : itens) {
+			valorTotal.add(item.getOrcamento());
+		}
+		return (valorTotal == null) ? 0 : valorTotal.doubleValue();
+	}
+	
 	public SituacaoOrdemServico getSituacao() {
 		return SituacaoOrdemServico.toEnum(situacao);
 	}
@@ -80,14 +89,6 @@ public class OrdemServico implements Serializable{
 
 	public void setItens(List<ItemOrdemServico> itens) {
 		this.itens = itens;
-	}
-
-	public Double getValorOrcamento() {
-		return valorOrcamento;
-	}
-
-	public void setValorOrcamento(Double valorOrcamento) {
-		this.valorOrcamento = valorOrcamento;
 	}
 	
 	@Override

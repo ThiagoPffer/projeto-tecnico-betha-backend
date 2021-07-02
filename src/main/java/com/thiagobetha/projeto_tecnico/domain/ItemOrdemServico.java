@@ -1,6 +1,7 @@
 package com.thiagobetha.projeto_tecnico.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ public class ItemOrdemServico  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	private BigDecimal orcamento;
 	
 	private String equipamento;
 	private String descricaoEquipamento;
@@ -46,6 +48,14 @@ public class ItemOrdemServico  implements Serializable{
 		this.id = id;
 	}
 
+	public BigDecimal getOrcamento() {
+		return orcamento;
+	}
+
+	public void setOrcamento(BigDecimal orcamento) {
+		this.orcamento = orcamento;
+	}
+	
 	public String getEquipamento() {
 		return equipamento;
 	}

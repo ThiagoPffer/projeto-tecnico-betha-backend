@@ -24,4 +24,9 @@ public class OrdemServicoService {
 		return obj.orElse(null);
 	}
 	
+	public OrdemServico insert(OrdemServico obj) {
+		obj.setId(null); //?????
+		return repo.save(obj);
+	}
+	
 }
