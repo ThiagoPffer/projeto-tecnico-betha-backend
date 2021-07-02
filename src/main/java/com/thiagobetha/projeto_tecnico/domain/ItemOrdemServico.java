@@ -19,7 +19,7 @@ public class ItemOrdemServico  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private BigDecimal orcamento;
+	private BigDecimal orcamento = BigDecimal.ZERO;
 	
 	private String equipamento;
 	private String descricaoEquipamento;
@@ -49,7 +49,7 @@ public class ItemOrdemServico  implements Serializable{
 	}
 
 	public BigDecimal getOrcamento() {
-		return orcamento;
+		return (orcamento == null) ? BigDecimal.ZERO : orcamento;
 	}
 
 	public void setOrcamento(BigDecimal orcamento) {

@@ -22,7 +22,7 @@ public class OrdemServico implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	private BigDecimal valorTotal;
+	private BigDecimal valorTotal = BigDecimal.ZERO;
 	
 	private Integer situacao;
 	private Integer pagamento;
@@ -52,11 +52,11 @@ public class OrdemServico implements Serializable{
 		this.id = id;
 	}
 
-	public double getValorTotal() {		
+	public BigDecimal getValorTotal() {		
 		for(ItemOrdemServico item : itens) {
 			valorTotal.add(item.getOrcamento());
 		}
-		return (valorTotal == null) ? 0 : valorTotal.doubleValue();
+		return (valorTotal == null) ? BigDecimal.ZERO : valorTotal;
 	}
 	
 	public SituacaoOrdemServico getSituacao() {
