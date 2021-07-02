@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
 import com.thiagobetha.projeto_tecnico.services.OrdemServicoService;
 
@@ -34,6 +35,21 @@ public class OrdemServicoResource {
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	@RequestMapping(value = "/{id}/itens", method = RequestMethod.GET)
+	public ResponseEntity<List<ItemOrdemServico>> listAllItems(@PathVariable Integer id) {	
+		List<ItemOrdemServico> list = service.findAllItems(id);
+		return ResponseEntity.ok().body(list);
+	}
+	
+	@RequestMapping(value = "/{id}/itens/{itemId}", method = RequestMethod.GET)
+	public ResponseEntity<ItemOrdemServico> listOneItem(@PathVariable Integer id, @PathVariable Integer itemId) {	
+		ItemOrdemServico obj = service.findOneItem(id, itemId);
+		/*if(obj == null) {
+			<<<erro 404>>>
+		}*/
+		return ResponseEntity.ok().body(obj);
+	}
+	
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@RequestBody OrdemServico obj) {
 		obj = service.insert(obj);
@@ -41,5 +57,14 @@ public class OrdemServicoResource {
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	/*@RequestMapping(value = "/{id}/itens", method = RequestMethod.POST)
+	public ResponseEntity<Void> insertItens(@PathVariable Integer id, @RequestBody List<ItemOrdemServico> list) {
+		OrdemServico os = service.findOne(id);
+			
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+	}*/
 	
 }
