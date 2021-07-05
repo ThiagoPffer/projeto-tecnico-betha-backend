@@ -44,9 +44,6 @@ public class OrdemServicoResource {
 	@RequestMapping(value = "/{id}/itens/{itemId}", method = RequestMethod.GET)
 	public ResponseEntity<ItemOrdemServico> listOneItem(@PathVariable Integer id, @PathVariable Integer itemId) {	
 		ItemOrdemServico obj = service.findOneItem(id, itemId);
-		/*if(obj == null) {
-			<<<erro 404>>>
-		}*/
 		return ResponseEntity.ok().body(obj);
 	}
 	
@@ -61,9 +58,10 @@ public class OrdemServicoResource {
 	/*@RequestMapping(value = "/{id}/itens", method = RequestMethod.POST)
 	public ResponseEntity<Void> insertItens(@PathVariable Integer id, @RequestBody List<ItemOrdemServico> list) {
 		OrdemServico os = service.findOne(id);
-			
+		os.setItens(list);
+		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(obj.getId()).toUri();
+				.path("/{id}").buildAndExpand(os.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}*/
 	
