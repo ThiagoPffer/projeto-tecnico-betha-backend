@@ -59,7 +59,6 @@ public class OrdemServicoService {
 	}
 	
 	public OrdemServico insertItems(Integer id, List<ItemOrdemServico> list) {
-		//Integer i = 0;
 		OrdemServico obj = findOne(id);
 		
 		for(ItemOrdemServico item : list) {
