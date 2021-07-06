@@ -18,12 +18,11 @@ public class ItemOrdemServico  implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private BigDecimal orcamento = BigDecimal.ZERO;
-	
+	private Integer id;	
 	private String equipamento;
 	private String descricaoEquipamento;
 	private String avariaEquipamento;
+	private BigDecimal orcamento = BigDecimal.ZERO;
 	
 	@JsonIgnore
 	@ManyToOne
@@ -46,14 +45,6 @@ public class ItemOrdemServico  implements Serializable{
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public BigDecimal getOrcamento() {
-		return (orcamento == null) ? BigDecimal.ZERO : orcamento;
-	}
-
-	public void setOrcamento(BigDecimal orcamento) {
-		this.orcamento = orcamento;
 	}
 	
 	public String getEquipamento() {
@@ -80,6 +71,14 @@ public class ItemOrdemServico  implements Serializable{
 		this.avariaEquipamento = avaria;
 	}
 
+	public BigDecimal getOrcamento() {
+		return (orcamento == null) ? BigDecimal.ZERO : orcamento;
+	}
+
+	public void setOrcamento(BigDecimal orcamento) {
+		this.orcamento = orcamento;
+	}
+	
 	public OrdemServico getOrdemServico() {
 		return ordemServico;
 	}

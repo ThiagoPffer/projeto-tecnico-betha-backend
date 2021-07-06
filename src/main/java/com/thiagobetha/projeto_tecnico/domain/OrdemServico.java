@@ -22,10 +22,9 @@ public class OrdemServico implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	private BigDecimal valorTotal = BigDecimal.ZERO;
-	
 	private Integer situacao;
 	private Integer pagamento;
+	private BigDecimal valorTotal = BigDecimal.ZERO;
 	
 	private String cliente; //configurar, falta setar endereço
 	
@@ -39,8 +38,8 @@ public class OrdemServico implements Serializable{
 
 	public OrdemServico(String cliente) {
 		super();
-		this.pagamento = 1;
 		this.situacao = 1;
+		this.pagamento = 1;
 		this.cliente = cliente;
 	}
 
@@ -50,17 +49,6 @@ public class OrdemServico implements Serializable{
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public BigDecimal getValorTotal() {		
-		/*for(ItemOrdemServico item : itens) {
-			valorTotal.add(item.getOrcamento());
-		}*/
-		return (valorTotal == null) ? BigDecimal.ZERO : valorTotal;
-	}
-	
-	public void setValorTotal(BigDecimal orcamento) {
-		this.valorTotal = valorTotal.add(orcamento);
 	}
 
 	public SituacaoOrdemServico getSituacao() {
@@ -79,6 +67,14 @@ public class OrdemServico implements Serializable{
 		this.pagamento = pagamento.getCod();
 	}
 
+	public BigDecimal getValorTotal() {		
+		return (valorTotal == null) ? BigDecimal.ZERO : valorTotal;
+	}
+	
+	public void setValorTotal(BigDecimal orcamento) {
+		this.valorTotal = valorTotal.add(orcamento);
+	}
+	
 	public String getCliente() {
 		return cliente;
 	}
