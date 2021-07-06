@@ -42,20 +42,15 @@ public class OrdemServicoService {
 		OrdemServico.class.getName() + " não encontrado!"));
 	}
 	
-	@SuppressWarnings("unused")
 	public ItemOrdemServico findOneItem(Integer id, Integer itemId){
-		ItemOrdemServico item = null;
 		List<ItemOrdemServico> list = findAllItems(id);
 		for(ItemOrdemServico itemAux : list) {
 			if(itemId == itemAux.getId()) {
-				item = itemAux;
-				return item;
+				return itemAux;
 			}
 		}
-		if(item == null) {
-			throw new ObjectNotFoundException("Nenhum item de id " + itemId + " do tipo " + ItemOrdemServico.class.getName() + 
+    	throw new ObjectNotFoundException("Nenhum item de id " + itemId + " do tipo " + ItemOrdemServico.class.getName() + 
 					" no serviço de id " + id + " foi encontrado!");
-		} else return item;
 	}
 	
 	public OrdemServico insert(OrdemServico obj) {
@@ -63,14 +58,18 @@ public class OrdemServicoService {
 		return repo.save(obj);
 	}
 	
-	/* public ItemOrdemServico insertItem(Integer id, ItemOrdemServico obj) {
-		List<ItemOrdemServico> list;
-		OrdemServico os = findOne(id);
-		list.add(obj);
-		os.setItens(list);
+	public OrdemServico insertItems(Integer id, List<ItemOrdemServico> list) {
+		//Integer i = 0;
+		OrdemServico obj = findOne(id);
 		
-		obj.setId(null);
-		return repo.save(os);
-	} */
+		for(ItemOrdemServico item : list) {
+			item.setOrdemServico(obj);
+			obj.setValorTotal(item.getOrcamento());
+		}
+		
+		obj.setItens(list);
+		
+		return repo.save(obj);
+	} 
 	
 }

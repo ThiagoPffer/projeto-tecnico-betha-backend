@@ -55,14 +55,13 @@ public class OrdemServicoResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
-	/*@RequestMapping(value = "/{id}/itens", method = RequestMethod.POST)
+	@RequestMapping(value = "/{id}/itens", method = RequestMethod.POST)
 	public ResponseEntity<Void> insertItens(@PathVariable Integer id, @RequestBody List<ItemOrdemServico> list) {
-		OrdemServico os = service.findOne(id);
-		os.setItens(list);
-		
+		OrdemServico obj = service.insertItems(id, list);
+				
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(os.getId()).toUri();
+				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
-	}*/
+	}
 	
 }

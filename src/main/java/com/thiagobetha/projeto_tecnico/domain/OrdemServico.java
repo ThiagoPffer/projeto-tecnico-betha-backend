@@ -53,12 +53,16 @@ public class OrdemServico implements Serializable{
 	}
 
 	public BigDecimal getValorTotal() {		
-		for(ItemOrdemServico item : itens) {
+		/*for(ItemOrdemServico item : itens) {
 			valorTotal.add(item.getOrcamento());
-		}
+		}*/
 		return (valorTotal == null) ? BigDecimal.ZERO : valorTotal;
 	}
 	
+	public void setValorTotal(BigDecimal orcamento) {
+		this.valorTotal = valorTotal.add(orcamento);
+	}
+
 	public SituacaoOrdemServico getSituacao() {
 		return SituacaoOrdemServico.toEnum(situacao);
 	}
