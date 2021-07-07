@@ -50,7 +50,8 @@ public class OrdemServicoResource {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@RequestBody OrdemServicoPostDTO newObj) {
-		OrdemServico obj = service.insert(newObj);
+		OrdemServico obj = service.fromDTO(newObj);
+		obj = service.insert(obj);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();

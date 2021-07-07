@@ -59,10 +59,7 @@ public class OrdemServicoService {
 	}
 	
 	@Transactional
-	public OrdemServico insert(OrdemServicoPostDTO newObj) {
-		Cliente cliente = clienteService.findOne(newObj.getIdCliente());
-		OrdemServico obj = new OrdemServico(cliente);
-		
+	public OrdemServico insert(OrdemServico obj) {
 		obj.setId(null);
 		return repo.save(obj);
 	}
@@ -80,4 +77,8 @@ public class OrdemServicoService {
 		return repo.save(obj);
 	} 
 	
+	public OrdemServico fromDTO(OrdemServicoPostDTO newObj) {
+		Cliente cliente = clienteService.findOne(newObj.getIdCliente());
+		return new OrdemServico(cliente);
+	}
 }

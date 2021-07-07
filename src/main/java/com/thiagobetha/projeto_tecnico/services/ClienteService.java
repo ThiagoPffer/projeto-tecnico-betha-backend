@@ -39,15 +39,17 @@ public class ClienteService {
 	}
 	
 	@Transactional
-	public Cliente insert(ClientePostDTO newObj) {
+	public Cliente insert(Cliente obj) {
+		obj.setId(null);
+		return repo.save(obj);
+	}
+	
+	public Cliente fromDTO(ClientePostDTO newObj) {
 		Cliente obj = new Cliente(newObj.getNome(), newObj.getEmail(), newObj.getTelefone());
 		Endereco endereco = new Endereco(newObj.getLogradouro(), newObj.getNumero(), 
 				newObj.getBairro(), newObj.getCidade(), newObj.getEstado());
 		obj.setEndereco(endereco);
-		
-		obj.setId(null);
 		enderecoRepo.save(endereco);
-		return repo.save(obj);
+		return obj;
 	}
-	
 }
