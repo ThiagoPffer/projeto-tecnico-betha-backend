@@ -38,6 +38,15 @@ public class ClienteService {
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Cliente de id " + id + " não encontrado!"));
 	}
 	
+	public List<OrdemServico> findAllOrdensServico(Integer id){
+		List<OrdemServico> list = findOne(id).getOrdensServico();
+		if(list.isEmpty()) {
+			throw new ObjectNotFoundException("Nenhum serviço para o cliente de id " + 
+					id + " foi encontrado!");
+		}
+		return list;
+	}
+	
 	@Transactional
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);

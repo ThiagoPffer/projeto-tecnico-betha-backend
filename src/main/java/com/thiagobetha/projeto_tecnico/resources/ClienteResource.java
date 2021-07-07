@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.thiagobetha.projeto_tecnico.domain.Cliente;
+import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
 import com.thiagobetha.projeto_tecnico.dto.ClientePostDTO;
 import com.thiagobetha.projeto_tecnico.services.ClienteService;
 
@@ -33,6 +34,12 @@ public class ClienteResource {
 	public ResponseEntity<Cliente> getOne(@PathVariable Integer id) {
 		Cliente obj = service.findOne(id);
 		return ResponseEntity.ok().body(obj);
+	}
+	
+	@RequestMapping(value = "/{id}/ordensservico", method = RequestMethod.GET)
+	public ResponseEntity<List<OrdemServico>> listOrdensServico(@PathVariable Integer id) {
+		List<OrdemServico> list = service.findAllOrdensServico(id);
+		return ResponseEntity.ok().body(list);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
