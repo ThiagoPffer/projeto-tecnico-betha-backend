@@ -30,7 +30,7 @@ public class OrdemServicoResource {
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<OrdemServico> listOne(@PathVariable Integer id) {
+	public ResponseEntity<OrdemServico> getOne(@PathVariable Integer id) {
 		OrdemServico obj = service.findOne(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -42,7 +42,7 @@ public class OrdemServicoResource {
 	}
 	
 	@RequestMapping(value = "/{id}/itens/{itemId}", method = RequestMethod.GET)
-	public ResponseEntity<ItemOrdemServico> listOneItem(@PathVariable Integer id, @PathVariable Integer itemId) {	
+	public ResponseEntity<ItemOrdemServico> getOneItem(@PathVariable Integer id, @PathVariable Integer itemId) {	
 		ItemOrdemServico obj = service.findOneItem(id, itemId);
 		return ResponseEntity.ok().body(obj);
 	}

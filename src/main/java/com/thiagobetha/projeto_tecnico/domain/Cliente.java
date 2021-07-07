@@ -1,11 +1,19 @@
 package com.thiagobetha.projeto_tecnico.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Cliente implements Serializable{
@@ -16,13 +24,19 @@ public class Cliente implements Serializable{
 	private Integer id;
 	private String nome;
 	private String email;
-	private Integer telefone;
+	private String telefone;
+	
+	@OneToOne
+	@JoinColumn(name="endereco_id")
+	private Endereco endereco;
 
-	//private List<OrdemServico> ordemServico;
+	@JsonIgnore
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+	private List<OrdemServico> ordensServico = new ArrayList<>();
 
 	public Cliente() {}
 
-	public Cliente(String nome, String email, Integer telefone) {
+	public Cliente(String nome, String email, String telefone) {
 		super();
 		this.nome = nome;
 		this.email = email;
@@ -53,21 +67,29 @@ public class Cliente implements Serializable{
 		this.email = email;
 	}
 
-	public Integer getTelefone() {
+	public String getTelefone() {
 		return telefone;
 	}
 
-	public void setTelefone(Integer telefone) {
+	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
 	
-	/*public List<OrdemServico> getOrdemServico() {
-		return ordemServico;
+	public Endereco getEndereco() {
+		return endereco;
 	}
 
-	public void setOrdemServico(List<OrdemServico> ordemServico) {
-		this.ordemServico = ordemServico;
-	}*/
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+	
+	public List<OrdemServico> getOrdensServico() {
+		return ordensServico;
+	}
+
+	public void setOrdensServico(OrdemServico ordemServico) {
+		this.ordensServico.add(ordemServico);
+	}
 	
 	@Override
 	public int hashCode() {

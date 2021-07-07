@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.thiagobetha.projeto_tecnico.domain.enums.EstadoPagamento;
@@ -26,7 +28,9 @@ public class OrdemServico implements Serializable{
 	private Integer pagamento;
 	private BigDecimal valorTotal = BigDecimal.ZERO;
 	
-	private String cliente; //configurar, falta setar endereço
+	@ManyToOne
+	@JoinColumn(name="cliente_id")
+	private Cliente cliente; //falta setar endereço
 	
 	@OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL)
 	private List<ItemOrdemServico> itens = new ArrayList<>();
@@ -36,7 +40,7 @@ public class OrdemServico implements Serializable{
 		this.situacao = 1;
 	}
 
-	public OrdemServico(String cliente) {
+	public OrdemServico(Cliente cliente) {
 		super();
 		this.situacao = 1;
 		this.pagamento = 1;
@@ -75,11 +79,11 @@ public class OrdemServico implements Serializable{
 		this.valorTotal = valorTotal.add(orcamento);
 	}
 	
-	public String getCliente() {
+	public Cliente getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(String cliente) {
+	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
 

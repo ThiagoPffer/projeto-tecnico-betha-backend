@@ -30,16 +30,14 @@ public class OrdemServicoService {
 		OrdemServico obj = findOne(id);
 		List<ItemOrdemServico> list = obj.getItens();
 		if(list.isEmpty()) {
-			throw new ObjectNotFoundException("Nenhum item do tipo " + ItemOrdemServico.class.getName() + 
-					" no serviço de id " + id + " foi encontrado!");
+			throw new ObjectNotFoundException("Nenhum item no serviço de id " + id + " foi encontrado!");
 		}
 		return list;
 	}
 	
 	public OrdemServico findOne(Integer id) {
 		Optional<OrdemServico> obj = repo.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException("Serviço de id " + id + " do tipo " + 
-		OrdemServico.class.getName() + " não encontrado!"));
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Serviço de id " + id + " não encontrado!"));
 	}
 	
 	public ItemOrdemServico findOneItem(Integer id, Integer itemId){
@@ -49,7 +47,7 @@ public class OrdemServicoService {
 				return itemAux;
 			}
 		}
-    	throw new ObjectNotFoundException("Nenhum item de id " + itemId + " do tipo " + ItemOrdemServico.class.getName() + 
+    	throw new ObjectNotFoundException("Nenhum item de id " + itemId + 
 					" no serviço de id " + id + " foi encontrado!");
 	}
 	
