@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
+import com.thiagobetha.projeto_tecnico.dto.OrdemServicoPostDTO;
 import com.thiagobetha.projeto_tecnico.services.OrdemServicoService;
 
 @RestController
@@ -48,8 +49,9 @@ public class OrdemServicoResource {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody OrdemServico obj) {
-		obj = service.insert(obj);
+	public ResponseEntity<Void> insert(@RequestBody OrdemServicoPostDTO newObj) {
+		OrdemServico obj = service.insert(newObj);
+		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();

@@ -3,11 +3,15 @@ package com.thiagobetha.projeto_tecnico.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thiagobetha.projeto_tecnico.domain.Cliente;
 import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
+import com.thiagobetha.projeto_tecnico.dto.OrdemServicoPostDTO;
 import com.thiagobetha.projeto_tecnico.repositories.OrdemServicoRepository;
 import com.thiagobetha.projeto_tecnico.services.exceptions.ObjectNotFoundException;
 
@@ -16,6 +20,9 @@ public class OrdemServicoService {
 	
 	@Autowired
 	private OrdemServicoRepository repo;
+	
+	@Autowired
+	private ClienteService clienteService;
 	
 	public List<OrdemServico> findAll(){
 		List<OrdemServico> list = repo.findAll();
@@ -51,7 +58,11 @@ public class OrdemServicoService {
 					" no serviço de id " + id + " foi encontrado!");
 	}
 	
-	public OrdemServico insert(OrdemServico obj) {
+	@Transactional
+	public OrdemServico insert(OrdemServicoPostDTO newObj) {
+		Cliente cliente = clienteService.findOne(newObj.getIdCliente());
+		OrdemServico obj = new OrdemServico(cliente);
+		
 		obj.setId(null);
 		return repo.save(obj);
 	}
