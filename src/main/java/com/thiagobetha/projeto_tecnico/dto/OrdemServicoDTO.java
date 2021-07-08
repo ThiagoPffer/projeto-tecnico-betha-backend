@@ -2,14 +2,14 @@ package com.thiagobetha.projeto_tecnico.dto;
 
 import java.io.Serializable;
 
-public class OrdemServicoPostDTO implements Serializable{
+public class OrdemServicoDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Integer idCliente;
 	
-	OrdemServicoPostDTO(){}
+	OrdemServicoDTO(){}
 
-	public OrdemServicoPostDTO(Integer idCliente) {
+	public OrdemServicoDTO(Integer idCliente) {
 		super();
 		this.idCliente = idCliente;
 	}

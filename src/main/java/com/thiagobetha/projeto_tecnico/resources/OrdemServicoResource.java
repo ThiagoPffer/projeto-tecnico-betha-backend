@@ -14,7 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
-import com.thiagobetha.projeto_tecnico.dto.OrdemServicoPostDTO;
+import com.thiagobetha.projeto_tecnico.dto.OrdemServicoDTO;
 import com.thiagobetha.projeto_tecnico.services.OrdemServicoService;
 
 @RestController
@@ -49,7 +49,7 @@ public class OrdemServicoResource {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody OrdemServicoPostDTO newObj) {
+	public ResponseEntity<Void> insert(@RequestBody OrdemServicoDTO newObj) {
 		OrdemServico obj = service.fromDTO(newObj);
 		obj = service.insert(obj);
 		
@@ -67,4 +67,17 @@ public class OrdemServicoResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody OrdemServicoDTO objDto, @PathVariable Integer id){
+		OrdemServico obj = service.fromDTO(objDto);
+		obj.setId(id);
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build();
+	}
+
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable Integer id) {
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 }
