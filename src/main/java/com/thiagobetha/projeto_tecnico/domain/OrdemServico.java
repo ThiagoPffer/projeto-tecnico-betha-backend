@@ -2,6 +2,7 @@ package com.thiagobetha.projeto_tecnico.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class OrdemServico implements Serializable{
 	private Integer id;
 	private Integer situacao;
 	private Integer pagamento;
+	private LocalDateTime instante;
 	private BigDecimal valorTotal = BigDecimal.ZERO;
 	
 	@ManyToOne
@@ -38,12 +40,14 @@ public class OrdemServico implements Serializable{
 	public OrdemServico() {
 		this.pagamento = 1;
 		this.situacao = 1;
+		this.instante = LocalDateTime.now();
 	}
 
 	public OrdemServico(Cliente cliente) {
 		super();
 		this.situacao = 1;
 		this.pagamento = 1;
+		this.instante = LocalDateTime.now();
 		this.cliente = cliente;
 	}
 
@@ -71,6 +75,14 @@ public class OrdemServico implements Serializable{
 		this.pagamento = pagamento.getCod();
 	}
 
+	public LocalDateTime getInstante() {
+		return (instante == null) ? LocalDateTime.now() : instante;
+	}
+
+	public void setInstante(LocalDateTime instante) {
+		this.instante = instante;
+	}
+	
 	public BigDecimal getValorTotal() {		
 		return (valorTotal == null) ? BigDecimal.ZERO : valorTotal;
 	}
