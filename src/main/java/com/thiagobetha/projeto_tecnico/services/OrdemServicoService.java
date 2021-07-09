@@ -1,5 +1,6 @@
 package com.thiagobetha.projeto_tecnico.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,56 +34,43 @@ public class OrdemServicoService {
 		return list;
 	}
 	
-	public List<ItemOrdemServico> findAllItems(Integer id){
-		OrdemServico obj = findOne(id);
-		List<ItemOrdemServico> list = obj.getItens();
-		if(list.isEmpty()) {
-			throw new ObjectNotFoundException("Nenhum item no serviço de id " + id + " foi encontrado!");
-		}
-		return list;
-	}
-	
 	public OrdemServico findOne(Integer id) {
 		Optional<OrdemServico> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Serviço de id " + id + " não encontrado!"));
 	}
 	
-	public ItemOrdemServico findOneItem(Integer id, Integer itemId){
-		List<ItemOrdemServico> list = findAllItems(id);
-		for(ItemOrdemServico itemAux : list) {
-			if(itemId == itemAux.getId()) {
-				return itemAux;
-			}
-		}
-    	throw new ObjectNotFoundException("Nenhum item de id " + itemId + 
-					" no serviço de id " + id + " foi encontrado!");
-	}
-	
 	@Transactional
 	public OrdemServico insert(OrdemServico obj) {
 		obj.setId(null);
+		atualizarValorTotal(obj);
 		return repo.save(obj);
 	}
 	
-	public OrdemServico update(OrdemServico obj) {
-		OrdemServico newObj = findOne(obj.getId());
-		newObj.setCliente(obj.getCliente());
-		return repo.save(newObj);
-	}
-	
-	public OrdemServico insertItems(Integer id, List<ItemOrdemServico> list) {
-		OrdemServico obj = findOne(id);
+	@Transactional //CÓDIGO IMCOMPLETO: REMOÇÃO DE ITENS NÃO FUNCIONANDO (PROBLEMA 8)
+	public OrdemServico update(OrdemServico newObj) {
+		Boolean mustRemove = true;
+		OrdemServico obj = findOne(newObj.getId());
+		obj.setCliente(newObj.getCliente());
 		
-		for(ItemOrdemServico item : list) {
-			item.setOrdemServico(obj);
-			obj.setValorTotal(item.getOrcamento());
+		/*if(obj.getItens().size() > newObj.getItens().size()) {
+		}*/
+		
+		for(ItemOrdemServico item : obj.getItens()) {
+			for(ItemOrdemServico novoItem : newObj.getItens()) {
+				if(novoItem.getId() == item.getId()) {
+					mustRemove = false;
+					item = novoItem;
+				}
+			}
+			if(mustRemove == true) {
+				obj.getItens().remove(item);
+			}
 		}
 		
-		obj.setItens(list);
-		
-		return repo.save(obj);
-	} 
-	
+		atualizarValorTotal(newObj);
+		return repo.save(newObj);
+	}
+
 	public void delete(Integer id) {
 		findOne(id);
 		repo.deleteById(id);
@@ -90,7 +78,22 @@ public class OrdemServicoService {
 	
 	public OrdemServico fromDTO(OrdemServicoDTO newObj) {
 		Cliente cliente = clienteService.findOne(newObj.getIdCliente());
-		return new OrdemServico(cliente);
+		OrdemServico os = new OrdemServico(cliente);
+		os.setItens(newObj.getItens());
+		
+		for(ItemOrdemServico i : newObj.getItens()) {
+			i.setOrdemServico(os);
+		}
+		
+		return os;
 	}
-
+	
+	private void atualizarValorTotal(OrdemServico obj) {
+		List<ItemOrdemServico> list = obj.getItens();
+		obj.setValorTotal(BigDecimal.ZERO);
+		for(ItemOrdemServico item : list) {
+			obj.setValorTotal(item.getOrcamento());
+		}
+	}
+	
 }

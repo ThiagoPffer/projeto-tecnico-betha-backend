@@ -32,7 +32,7 @@ public class OrdemServico implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name="cliente_id")
-	private Cliente cliente; //falta setar endereço
+	private Cliente cliente;
 	
 	@OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL)
 	private List<ItemOrdemServico> itens = new ArrayList<>();
@@ -88,7 +88,11 @@ public class OrdemServico implements Serializable{
 	}
 	
 	public void setValorTotal(BigDecimal orcamento) {
-		this.valorTotal = valorTotal.add(orcamento);
+		if(orcamento == BigDecimal.ZERO) {
+			this.valorTotal = orcamento;
+		} else {
+			this.valorTotal = valorTotal.add(orcamento);
+		}
 	}
 	
 	public Cliente getCliente() {
