@@ -44,6 +44,15 @@ public class ClienteService {
 		return repo.save(obj);
 	}
 	
+	public Cliente update(Cliente newObj) {
+		return repo.save(newObj);
+	}
+	
+	public void delete(Integer id) {
+		findOne(id);
+		repo.deleteById(id);
+	}
+	
 	public Cliente fromDTO(ClientePostDTO newObj) {
 		Cliente obj = new Cliente(newObj.getNome(), newObj.getEmail(), newObj.getTelefone());
 		Endereco endereco = new Endereco(newObj.getLogradouro(), newObj.getNumero(), 
