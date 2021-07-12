@@ -13,6 +13,7 @@ import com.thiagobetha.projeto_tecnico.domain.Cliente;
 import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
 import com.thiagobetha.projeto_tecnico.dto.OrdemServicoDTO;
+import com.thiagobetha.projeto_tecnico.repositories.ItensRepository;
 import com.thiagobetha.projeto_tecnico.repositories.OrdemServicoRepository;
 import com.thiagobetha.projeto_tecnico.services.exceptions.ObjectNotFoundException;
 
@@ -24,6 +25,9 @@ public class OrdemServicoService {
 	
 	@Autowired
 	private ClienteService clienteService;
+
+	@Autowired
+	private ItensRepository itensRepo;
 	
 	public List<OrdemServico> findAll(){
 		List<OrdemServico> list = repo.findAll();
@@ -46,26 +50,21 @@ public class OrdemServicoService {
 		return repo.save(obj);
 	}
 	
-	@Transactional //CÓDIGO IMCOMPLETO: REMOÇÃO DE ITENS NÃO FUNCIONANDO (PROBLEMA 8)
+	/*
+	 * //REVER COM O MICHEL COM RELAÇÃO AO ITENS_ORDEM_SERVICO_REPOSITORY
+	 * Uma provável solução para este problema sem usar o ItensOrdemServicoRepository seria fazer uma query
+	 * no repositorio da ordemservico que delete os itens desejados da tabela dos itens.
+	 * "DELETE FROM ITEM_ORDEM_SERVICO WHERE ORDEM_SERVICO_ID = <id_da_ordem>"
+	*/
+	@Transactional 
 	public OrdemServico update(OrdemServico newObj) {
-		Boolean mustRemove = true;
 		OrdemServico obj = findOne(newObj.getId());
-		obj.setCliente(newObj.getCliente());
 		
-		/*if(obj.getItens().size() > newObj.getItens().size()) {
-		}*/
-		
-		for(ItemOrdemServico item : obj.getItens()) {
-			for(ItemOrdemServico novoItem : newObj.getItens()) {
-				if(novoItem.getId() == item.getId()) {
-					mustRemove = false;
-					item = novoItem;
-				}
+		obj.getItens().forEach(item -> {
+			if (!newObj.getItens().contains(item)) {
+				itensRepo.deleteById(item.getId());
 			}
-			if(mustRemove == true) {
-				obj.getItens().remove(item);
-			}
-		}
+		});
 		
 		atualizarValorTotal(newObj);
 		return repo.save(newObj);
