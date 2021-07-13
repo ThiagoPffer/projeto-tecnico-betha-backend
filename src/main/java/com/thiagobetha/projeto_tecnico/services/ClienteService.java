@@ -44,6 +44,7 @@ public class ClienteService {
 		return repo.save(obj);
 	}
 	
+	@Transactional
 	public Cliente update(Cliente newObj) {
 		return repo.save(newObj);
 	}

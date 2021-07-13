@@ -11,10 +11,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.thiagobetha.projeto_tecnico.domain.Cliente;
 import com.thiagobetha.projeto_tecnico.domain.Endereco;
+import com.thiagobetha.projeto_tecnico.domain.Funcionario;
 import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
 import com.thiagobetha.projeto_tecnico.repositories.ClienteRepository;
 import com.thiagobetha.projeto_tecnico.repositories.EnderecoRepository;
+import com.thiagobetha.projeto_tecnico.repositories.FuncionarioRepository;
 import com.thiagobetha.projeto_tecnico.repositories.OrdemServicoRepository;
 
 @SpringBootApplication
@@ -26,6 +28,8 @@ public class ProjetoTecnicoApplication implements CommandLineRunner{
 	private ClienteRepository clienteRepo;
 	@Autowired
 	private EnderecoRepository enderecoRepo;
+	@Autowired
+	private FuncionarioRepository funcionarioRepo;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ProjetoTecnicoApplication.class, args);
@@ -33,6 +37,10 @@ public class ProjetoTecnicoApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
+		
+		Funcionario adm = new Funcionario("Rodrigo Branas", "branas.rodrigoadm@gmail.com", 1);
+		Funcionario recep = new Funcionario("Rodrigo Branas", "branas.rodrigorecep@gmail.com", 2);
+		Funcionario tec = new Funcionario("Rodrigo Branas", "branas.rodrigotec@gmail.com", 3);
 		
 		Endereco end1 = new Endereco("Rua dos Correios Privatizados", "786", "Coloninha", "Araranguá", "Santa Catarina");
 		Endereco end2 = new Endereco("Avenida Sete de Setembro", "1086", "Urussanguinha", "Araranguá", "Santa Catarina");
@@ -90,6 +98,7 @@ public class ProjetoTecnicoApplication implements CommandLineRunner{
 		enderecoRepo.saveAll(Arrays.asList(end1, end2, end3));
 		clienteRepo.saveAll(Arrays.asList(cli1, cli2, cli3));
 		ordemServicoRepo.saveAll(Arrays.asList(os1, os2, os3));
+		funcionarioRepo.saveAll(Arrays.asList(adm, recep, tec));
 		
 	}
 	
