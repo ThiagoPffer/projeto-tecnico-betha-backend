@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.thiagobetha.projeto_tecnico.domain.enums.TipoFuncionario;
+
 @Entity
 public class Funcionario implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -51,12 +53,12 @@ public class Funcionario implements Serializable{
 		this.email = email;
 	}
 
-	public Integer getTipo() {
-		return tipo;
+	public TipoFuncionario getTipo() {
+		return TipoFuncionario.toEnum(tipo);
 	}
 
-	public void setTipo(Integer tipo) {
-		this.tipo = tipo;
+	public void setTipo(TipoFuncionario tipo) {
+		this.tipo = tipo.getCod();
 	}
 
 	@Override
