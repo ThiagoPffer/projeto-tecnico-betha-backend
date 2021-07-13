@@ -2,6 +2,7 @@ package com.thiagobetha.projeto_tecnico.resources;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
 import com.thiagobetha.projeto_tecnico.dto.OrdemServicoDTO;
+import com.thiagobetha.projeto_tecnico.dto.OrdemServicoListDTO;
 import com.thiagobetha.projeto_tecnico.services.OrdemServicoService;
 
 @RestController
@@ -24,9 +26,10 @@ public class OrdemServicoResource {
 	private OrdemServicoService service;
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<OrdemServico>> listAll() {	
+	public ResponseEntity<List<OrdemServicoListDTO>> listAll() {	
 		List<OrdemServico> list = service.findAll();
-		return ResponseEntity.ok().body(list);
+		List<OrdemServicoListDTO> listDTO = list.stream().map(obj -> new OrdemServicoListDTO(obj)).collect(Collectors.toList());
+		return ResponseEntity.ok().body(listDTO);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

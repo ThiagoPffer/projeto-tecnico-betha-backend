@@ -13,7 +13,7 @@ public class OrdemServicoDTO implements Serializable{
 	
 	private List<ItemOrdemServico> itens = new ArrayList<>();
 	
-	OrdemServicoDTO(){}
+	public OrdemServicoDTO(){}
 
 	public OrdemServicoDTO(Integer idCliente) {
 		super();
