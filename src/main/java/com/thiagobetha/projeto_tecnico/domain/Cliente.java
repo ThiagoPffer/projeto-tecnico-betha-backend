@@ -74,13 +74,8 @@ public class Cliente implements Serializable{
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-	
-	public String getEndereco() {
-		return endereco.toString();
-	}
 
-	@JsonIgnore
-	public Endereco getEnderecoObj() {
+	public Endereco getEndereco() {
 		return endereco;
 	}
 	

@@ -99,21 +99,6 @@ public class Endereco implements Serializable{
 	}
 
 	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(logradouro);
-		builder.append(", numero: ");
-		builder.append(numero);
-		builder.append(", bairro: ");
-		builder.append(bairro);
-		builder.append(", cidade: ");
-		builder.append(cidade);
-		builder.append(", estado: ");
-		builder.append(estado);
-		return builder.toString();
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

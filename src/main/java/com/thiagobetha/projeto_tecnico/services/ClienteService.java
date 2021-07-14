@@ -55,13 +55,14 @@ public class ClienteService {
 	
 	@Transactional
 	public Cliente update(Cliente newObj) {
+		findOne(newObj.getId());
 		/*
 		 * A operação abaixo serve para buscar o id do endereço que já está
 		 * salvo no banco e dar um setid no endereço do novo objeto que está sendo
 		 * enviado. Isso é necessário para evitar a criação de um novo endereço com o
 		 * mesmo cliente na tabela Enderecos.
 		 */
-		newObj.getEnderecoObj().setId(findOne(newObj.getId()).getEnderecoObj().getId());
+		newObj.getEndereco().setId(findOne(newObj.getId()).getEndereco().getId());
 		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
 		return repo.save(newObj);
 	}
