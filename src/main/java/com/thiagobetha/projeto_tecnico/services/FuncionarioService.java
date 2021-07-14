@@ -6,6 +6,9 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.thiagobetha.projeto_tecnico.domain.Funcionario;
@@ -24,6 +27,11 @@ public class FuncionarioService {
 			throw new ObjectNotFoundException("Nenhum Funcionario foi encontrado!");
 		}
 		return list;
+	}
+	
+	public Page<Funcionario> findPage(Integer page, Integer linesPerPage, String direction, String orderBy){
+		PageRequest pageReq = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		return repo.findAll(pageReq);
 	}
 	
 	public Funcionario findOne(Integer id) {
