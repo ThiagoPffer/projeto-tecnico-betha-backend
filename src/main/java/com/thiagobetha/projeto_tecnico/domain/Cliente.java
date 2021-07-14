@@ -26,12 +26,12 @@ public class Cliente implements Serializable{
 	private String email;
 	private String telefone;
 	
-	@OneToOne
+	@OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
 	@JoinColumn(name="endereco_id")
 	private Endereco endereco;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cliente")
 	private List<OrdemServico> ordensServico = new ArrayList<>();
 
 	public Cliente() {}
@@ -79,6 +79,11 @@ public class Cliente implements Serializable{
 		return endereco.toString();
 	}
 
+	@JsonIgnore
+	public Endereco getEnderecoObj() {
+		return endereco;
+	}
+	
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}

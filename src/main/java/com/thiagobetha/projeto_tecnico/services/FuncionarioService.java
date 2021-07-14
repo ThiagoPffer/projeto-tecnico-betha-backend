@@ -31,6 +31,9 @@ public class FuncionarioService {
 	
 	public Page<Funcionario> findPage(Integer page, Integer linesPerPage, String direction, String orderBy){
 		PageRequest pageReq = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		if(repo.findAll(pageReq).getContent().isEmpty()) {
+			throw new ObjectNotFoundException("Nenhum Funcionario foi encontrado!");
+		}
 		return repo.findAll(pageReq);
 	}
 	
@@ -42,11 +45,13 @@ public class FuncionarioService {
 	@Transactional
 	public Funcionario insert(Funcionario obj) {
 		obj.setId(null);
+		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
 		return repo.save(obj);
 	}
 	
 	@Transactional
 	public Funcionario update(Funcionario newObj) {
+		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
 		return repo.save(newObj);
 	}
 	

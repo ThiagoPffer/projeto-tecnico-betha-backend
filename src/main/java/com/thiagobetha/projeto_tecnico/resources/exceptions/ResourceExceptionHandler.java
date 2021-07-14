@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.thiagobetha.projeto_tecnico.services.exceptions.DataIntegrityException;
 import com.thiagobetha.projeto_tecnico.services.exceptions.ObjectNotFoundException;
 
 @ControllerAdvice
@@ -24,8 +24,8 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 	}
 	
-	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ResponseEntity<StandardError> dataIntegrityViolation(DataIntegrityViolationException e, HttpServletRequest request){
+	@ExceptionHandler(DataIntegrityException.class)
+	public ResponseEntity<StandardError> dataIntegrityViolation(DataIntegrityException e, HttpServletRequest request){
 		StandardError err = new StandardError(
 				HttpStatus.CONFLICT.value(), 
 				e.getMessage(), 

@@ -35,25 +35,28 @@ public class OrdemServicoService {
 	public List<OrdemServico> findAll(){
 		List<OrdemServico> list = repo.findAll();
 		if(list.isEmpty()) {
-			throw new ObjectNotFoundException("Nenhum serviço do tipo " + 
-					OrdemServico.class.getName() + " foi encontrado!");
+			throw new ObjectNotFoundException("Nenhuma ordem de serviço foi encontrada!");
 		}
 		return list;
 	}
 	
 	public Page<OrdemServico> findPage(Integer page, Integer linesPerPage, String direction, String orderBy){
 		PageRequest pageReq = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		if(repo.findAll(pageReq).getContent().isEmpty()) {
+			throw new ObjectNotFoundException("Nenhuma ordem de serviço foi encontrada!");
+		}
 		return repo.findAll(pageReq);
 	}
 	
 	public OrdemServico findOne(Integer id) {
 		Optional<OrdemServico> obj = repo.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException("Serviço de id " + id + " não encontrado!"));
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Ordem de serviço de id " + id + " não encontrada!"));
 	}
 	
 	@Transactional
 	public OrdemServico insert(OrdemServico obj) {
 		obj.setId(null);
+		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
 		atualizarValorTotal(obj);
 		return repo.save(obj);
 	}
@@ -67,6 +70,8 @@ public class OrdemServicoService {
 	@Transactional 
 	public OrdemServico update(OrdemServico newObj) {
 		OrdemServico obj = findOne(newObj.getId());
+		
+		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
 		
 		obj.getItens().forEach(item -> {
 			if (!newObj.getItens().contains(item)) {

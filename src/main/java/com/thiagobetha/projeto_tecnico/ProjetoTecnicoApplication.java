@@ -15,7 +15,6 @@ import com.thiagobetha.projeto_tecnico.domain.Funcionario;
 import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
 import com.thiagobetha.projeto_tecnico.repositories.ClienteRepository;
-import com.thiagobetha.projeto_tecnico.repositories.EnderecoRepository;
 import com.thiagobetha.projeto_tecnico.repositories.FuncionarioRepository;
 import com.thiagobetha.projeto_tecnico.repositories.OrdemServicoRepository;
 
@@ -26,8 +25,6 @@ public class ProjetoTecnicoApplication implements CommandLineRunner{
 	private OrdemServicoRepository ordemServicoRepo;
 	@Autowired
 	private ClienteRepository clienteRepo;
-	@Autowired
-	private EnderecoRepository enderecoRepo;
 	@Autowired
 	private FuncionarioRepository funcionarioRepo;
 	
@@ -42,15 +39,16 @@ public class ProjetoTecnicoApplication implements CommandLineRunner{
 		Funcionario recep = new Funcionario("Rodrigo Branas", "branas.rodrigorecep@gmail.com", 2);
 		Funcionario tec = new Funcionario("Rodrigo Branas", "branas.rodrigotec@gmail.com", 3);
 		
-		Endereco end1 = new Endereco("Rua dos Correios Privatizados", "786", "Coloninha", "Araranguá", "Santa Catarina");
-		Endereco end2 = new Endereco("Avenida Sete de Setembro", "1086", "Urussanguinha", "Araranguá", "Santa Catarina");
-		Endereco end3 = new Endereco("Rua dos Pinheiros", "203", "Centro", "Araranguá", "Santa Catarina");
-		
 		Cliente cli1 = new Cliente("Thiago", "thiago.piffer@hotmail.com", "48998665287");
+		Endereco end1 = new Endereco(cli1, "Rua dos Correios Privatizados", "786", "Coloninha", "Araranguá", "Santa Catarina");
 		cli1.setEndereco(end1);
+		
 		Cliente cli2 = new Cliente("Maria", "mariatrdder@gmail.com", "48998223342");
+		Endereco end2 = new Endereco(cli2, "Avenida Sete de Setembro", "1086", "Urussanguinha", "Araranguá", "Santa Catarina");
 		cli2.setEndereco(end2);
+		
 		Cliente cli3 = new Cliente("João", "joao@hotmail.com", "48998142352");
+		Endereco end3 = new Endereco(cli3, "Rua dos Pinheiros", "203", "Centro", "Araranguá", "Santa Catarina");
 		cli3.setEndereco(end3);
 		
 		List<ItemOrdemServico> lista1 = new ArrayList<>();
@@ -94,8 +92,7 @@ public class ProjetoTecnicoApplication implements CommandLineRunner{
 		cli1.setOrdensServico(os1);
 		cli2.setOrdensServico(os2);
 		cli3.setOrdensServico(os3);
-		
-		enderecoRepo.saveAll(Arrays.asList(end1, end2, end3));
+
 		clienteRepo.saveAll(Arrays.asList(cli1, cli2, cli3));
 		ordemServicoRepo.saveAll(Arrays.asList(os1, os2, os3));
 		funcionarioRepo.saveAll(Arrays.asList(adm, recep, tec));

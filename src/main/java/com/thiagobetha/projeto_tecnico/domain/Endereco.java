@@ -6,6 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Endereco implements Serializable{
@@ -14,6 +18,12 @@ public class Endereco implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	
+	@JsonIgnore
+	@OneToOne
+	@JoinColumn(name="cliente_id")
+	private Cliente cliente;
+	
 	private String logradouro;
 	private String numero;
 	private String bairro;
@@ -22,13 +32,30 @@ public class Endereco implements Serializable{
 	
 	public Endereco() {}
 	
-	public Endereco(String logradouro, String numero, String bairro, String cidade, String estado) {
+	public Endereco(Cliente cliente, String logradouro, String numero, String bairro, String cidade, String estado) {
 		super();
+		this.cliente = cliente;
 		this.logradouro = logradouro;
 		this.numero = numero;
 		this.bairro = bairro;
 		this.cidade = cidade;
 		this.estado = estado;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	public String getLogradouro() {
