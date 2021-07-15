@@ -1,8 +1,10 @@
 package com.thiagobetha.projeto_tecnico.resources.exceptions;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class StandardError {
+public class StandardError implements Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	private Integer status;
 	private String message;

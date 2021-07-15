@@ -2,17 +2,29 @@ package com.thiagobetha.projeto_tecnico.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
 public class ClientePostDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
+	@NotEmpty(message = "Preenchimento obrigatório!")
 	private String nome;
+	@NotEmpty(message = "Preenchimento obrigatório!")
+	@Email(message = "Email inválido!")
 	private String email;
+	@NotEmpty(message = "Preenchimento obrigatório!")
 	private String telefone;
 	
+	@NotEmpty(message = "Preenchimento obrigatório!")
 	private String logradouro;
+	@NotEmpty(message = "Preenchimento obrigatório!")
 	private String numero;
+	@NotEmpty(message = "Preenchimento obrigatório!")
 	private String bairro;
+	@NotEmpty(message = "Preenchimento obrigatório!")
 	private String cidade;
+	@NotEmpty(message = "Preenchimento obrigatório!")
 	private String estado;
 	
 	public ClientePostDTO() {}
