@@ -6,6 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.thiagobetha.projeto_tecnico.domain.enums.TipoFuncionario;
 
@@ -16,8 +21,13 @@ public class Funcionario implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@NotEmpty(message = "Preenchimento obrigatório!")
+	@Length(min = 2, message = "Insira um nome válido")
 	private String nome;
+	@NotEmpty(message = "Preenchimento obrigatório!")
+	@Email(message = "Insira um email válido!")
 	private String email;
+	@NotNull(message = "Não pode ser nulo!")
 	private Integer tipo;
 	
 	public Funcionario() {}
