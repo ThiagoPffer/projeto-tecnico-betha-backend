@@ -48,14 +48,21 @@ public class ClienteService {
 	
 	@Transactional
 	public Cliente insert(Cliente obj) {
+		Cliente auxObj = repo.findByEmail(obj.getEmail());
+		if(auxObj != null) {
+			throw new IllegalArgumentException("Email já existente!");
+		}
 		obj.setId(null);
-		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
 		return repo.save(obj);
 	}
 	
 	@Transactional
 	public Cliente update(Cliente newObj) {
 		findOne(newObj.getId());
+		Cliente auxObj = repo.findByEmail(newObj.getEmail());
+		if(auxObj != null && auxObj.getId() != newObj.getId()) {
+			throw new IllegalArgumentException("Email já existente!");
+		}
 		/*
 		 * A operação abaixo serve para buscar o id do endereço que já está
 		 * salvo no banco e dar um setid no endereço do novo objeto que está sendo
@@ -63,7 +70,6 @@ public class ClienteService {
 		 * mesmo cliente na tabela Enderecos.
 		 */
 		newObj.getEndereco().setId(findOne(newObj.getId()).getEndereco().getId());
-		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
 		return repo.save(newObj);
 	}
 	

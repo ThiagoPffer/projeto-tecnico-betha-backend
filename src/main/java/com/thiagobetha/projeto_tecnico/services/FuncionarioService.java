@@ -44,14 +44,19 @@ public class FuncionarioService {
 	
 	@Transactional
 	public Funcionario insert(Funcionario obj) {
+		if(repo.findByEmail(obj.getEmail()) != null) {
+			throw new IllegalArgumentException("Email já existente!");
+		}
 		obj.setId(null);
-		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
 		return repo.save(obj);
 	}
 	
 	@Transactional
 	public Funcionario update(Funcionario newObj) {
-		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
+		findOne(newObj.getId());
+		if(repo.findByEmail(newObj.getEmail()) != null) {
+			throw new IllegalArgumentException("Email já existente!");
+		}
 		return repo.save(newObj);
 	}
 	

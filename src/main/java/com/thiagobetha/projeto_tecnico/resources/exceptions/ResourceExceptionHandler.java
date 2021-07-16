@@ -64,4 +64,13 @@ public class ResourceExceptionHandler {
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<StandardError> illegalArgument(IllegalArgumentException resError, HttpServletRequest request){
+		StandardError err = new StandardError(
+				HttpStatus.BAD_REQUEST.value(), 
+				resError.getMessage(), 
+				LocalDateTime.now());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
 }
