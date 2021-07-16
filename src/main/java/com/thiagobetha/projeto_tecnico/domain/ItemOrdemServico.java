@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -18,10 +21,15 @@ public class ItemOrdemServico  implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;	
+	private Integer id;
+	@NotEmpty(message = "Preenchimento obrigatório!")
 	private String equipamento;
-	private String descricaoEquipamento;
-	private String avariaEquipamento;
+	@NotEmpty(message = "Preenchimento obrigatório!")
+	@Length(min = 10, message = "Forneça uma descrição mais detalhada!") // Deve ser no minimo 100 caracteres (está 10 a efeito de testes)
+	private String descricao;
+	@NotEmpty(message = "Preenchimento obrigatório!")
+	@Length(min = 2, message = "A avaria deve ser mais detalhada!") // Deve ser no minimo 25 caracteres (está 2 a efeito de testes)
+	private String avaria;
 	private BigDecimal orcamento = BigDecimal.ZERO;
 	
 	@JsonIgnore
@@ -31,11 +39,15 @@ public class ItemOrdemServico  implements Serializable{
 
 	public ItemOrdemServico() {}
 	
-	public ItemOrdemServico(String equipamento, String descricaoEquipamento, String avariaEquipamento, OrdemServico ordemServico) {
+	public ItemOrdemServico(
+			String equipamento, 
+			String descricao, 
+			String avaria, 
+			OrdemServico ordemServico) {
 		super();
 		this.equipamento = equipamento;
-		this.descricaoEquipamento = descricaoEquipamento;
-		this.avariaEquipamento = avariaEquipamento;
+		this.descricao = descricao;
+		this.avaria = avaria;
 		this.ordemServico = ordemServico;
 	}
 
@@ -55,20 +67,20 @@ public class ItemOrdemServico  implements Serializable{
 		this.equipamento = equipamento;
 	}
 	
-	public String getDescricaoItem() {
-		return descricaoEquipamento;
+	public String getDescricao() {
+		return descricao;
 	}
 
-	public void setDescricaoItem(String descricaoItem) {
-		this.descricaoEquipamento = descricaoItem;
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	public String getAvaria() {
-		return avariaEquipamento;
+		return avaria;
 	}
 
 	public void setAvaria(String avaria) {
-		this.avariaEquipamento = avaria;
+		this.avaria = avaria;
 	}
 
 	public BigDecimal getOrcamento() {

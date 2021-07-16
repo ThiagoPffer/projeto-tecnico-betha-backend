@@ -4,13 +4,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
 
 public class OrdemServicoDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
+	@NotNull(message = "Preenchimento obrigatório!")
 	private Integer idCliente;
 	
+	@NotEmpty(message = "Pelo menos um item é necessário!")
 	private List<ItemOrdemServico> itens = new ArrayList<>();
 	
 	public OrdemServicoDTO(){}

@@ -3,6 +3,8 @@ package com.thiagobetha.projeto_tecnico.resources.exceptions;
 import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +46,20 @@ public class ResourceExceptionHandler {
 		
 		for(FieldError fieldErr : resError.getBindingResult().getFieldErrors()) {
 			err.addError(fieldErr.getField(), fieldErr.getDefaultMessage());
+		}
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<StandardError> validation(ConstraintViolationException resError, HttpServletRequest request){
+		ValidationError err = new ValidationError(
+				HttpStatus.BAD_REQUEST.value(), 
+				"Erro de Validação", 
+				LocalDateTime.now());
+		
+		for(ConstraintViolation<?> fieldErr : resError.getConstraintViolations()) {
+			err.addError(fieldErr.getPropertyPath().toString(), fieldErr.getMessage());
 		}
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);

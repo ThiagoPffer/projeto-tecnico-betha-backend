@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +54,7 @@ public class OrdemServicoResource {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody OrdemServicoDTO newObj) {
+	public ResponseEntity<Void> insert(@Valid @RequestBody OrdemServicoDTO newObj){
 		OrdemServico obj = service.fromDTO(newObj);
 		obj = service.insert(obj);
 		
@@ -62,7 +64,7 @@ public class OrdemServicoResource {
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
-	public ResponseEntity<Void> update(@RequestBody OrdemServicoDTO objDto, @PathVariable Integer id){
+	public ResponseEntity<Void> update(@Valid @RequestBody OrdemServicoDTO objDto, @PathVariable Integer id){
 		OrdemServico obj = service.fromDTO(objDto);
 		obj.setId(id);
 		obj = service.update(obj);
