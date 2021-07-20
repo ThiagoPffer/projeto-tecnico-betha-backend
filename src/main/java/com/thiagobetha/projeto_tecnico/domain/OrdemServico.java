@@ -2,9 +2,11 @@ package com.thiagobetha.projeto_tecnico.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -110,7 +112,7 @@ public class OrdemServico implements Serializable{
 	public void setItens(List<ItemOrdemServico> itens) {
 		this.itens = itens;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -134,6 +136,37 @@ public class OrdemServico implements Serializable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		StringBuilder builder = new StringBuilder();
+		builder.append("Número da ordem de serviço: ");
+		builder.append(getId());
+		builder.append("\nNome do cliente: ");
+		builder.append(getCliente().getNome());
+		builder.append("\nSituação da ordem: ");
+		builder.append(getSituacao());
+		builder.append("\nEstado do pagamento: ");
+		builder.append(getPagamento());
+		builder.append("\nOrdem lançada no dia: ");
+		builder.append(getInstante().getDayOfMonth()
+				+"/"+getInstante().getMonthValue()
+				+"/"+getInstante().getYear());
+		builder.append(" às ");
+		builder.append(getInstante().getHour()
+				+":"+getInstante().getMinute()
+				+":"+getInstante().getSecond());
+		builder.append("\nOrçamento total: ");
+		builder.append(nf.format(getValorTotal()));
+		builder.append("\nEquipamentos cadastrados: \n");
+		
+		for(ItemOrdemServico item : getItens()) {
+			builder.append(item.toString()+"\n");
+		}
+		
+		return builder.toString();
 	}
 	
 }

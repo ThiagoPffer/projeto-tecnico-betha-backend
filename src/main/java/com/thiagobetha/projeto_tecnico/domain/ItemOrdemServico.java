@@ -2,6 +2,8 @@ package com.thiagobetha.projeto_tecnico.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -122,6 +124,21 @@ public class ItemOrdemServico  implements Serializable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		StringBuilder builder = new StringBuilder();
+		builder.append("Equipamento: ");
+		builder.append(getEquipamento());
+		builder.append("\nDescrição do equipamento: ");
+		builder.append(getDescricao());
+		builder.append("\nAvaria do equipamento: ");
+		builder.append(getAvaria());
+		builder.append("\nOrçamento: ");
+		builder.append(nf.format(getOrcamento()));
+		return builder.toString();
 	}
 	
 }

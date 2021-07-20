@@ -58,6 +58,8 @@ public class OrdemServicoResource {
 		OrdemServico obj = service.fromDTO(newObj);
 		obj = service.insert(obj);
 		
+		System.out.println(obj);
+		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
