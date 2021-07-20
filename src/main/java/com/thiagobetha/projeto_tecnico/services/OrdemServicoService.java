@@ -32,6 +32,9 @@ public class OrdemServicoService {
 	@Autowired
 	private ItensRepository itensRepo;
 	
+	@Autowired
+	private EmailService emailService;
+	
 	public List<OrdemServico> findAll(){
 		List<OrdemServico> list = repo.findAll();
 		if(list.isEmpty()) {
@@ -58,7 +61,9 @@ public class OrdemServicoService {
 		obj.setId(null);
 		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
 		atualizarValorTotal(obj);
-		return repo.save(obj);
+		repo.save(obj);
+		emailService.sendOrderConfirmationEmail(obj);
+		return obj;
 	}
 	
 	/*
