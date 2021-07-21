@@ -90,6 +90,9 @@ public class OrdemServicoService {
 	public OrdemServico updateSituacao(SituacaoOrdemServico situacao, Integer id) {
 		OrdemServico obj = findOne(id);
 		obj.setSituacao(situacao);
+		if(obj.getSituacao() == SituacaoOrdemServico.AGUARDANDO_DECISAO) {
+			emailService.sendOrderConfirmationEmail(obj);
+		}
 		return repo.save(obj);
 	}
 
