@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.thiagobetha.projeto_tecnico.domain.Cliente;
 import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
+import com.thiagobetha.projeto_tecnico.domain.enums.SituacaoOrdemServico;
 import com.thiagobetha.projeto_tecnico.dto.OrdemServicoDTO;
 import com.thiagobetha.projeto_tecnico.repositories.ItensRepository;
 import com.thiagobetha.projeto_tecnico.repositories.OrdemServicoRepository;
@@ -83,6 +84,13 @@ public class OrdemServicoService {
 		
 		atualizarValorTotal(newObj);
 		return repo.save(newObj);
+	}
+	
+	@Transactional
+	public OrdemServico updateSituacao(SituacaoOrdemServico situacao, Integer id) {
+		OrdemServico obj = findOne(id);
+		obj.setSituacao(situacao);
+		return repo.save(obj);
 	}
 
 	public void delete(Integer id) {
