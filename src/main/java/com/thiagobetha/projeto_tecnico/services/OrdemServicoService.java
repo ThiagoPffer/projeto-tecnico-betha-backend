@@ -59,7 +59,6 @@ public class OrdemServicoService {
 	@Transactional
 	public OrdemServico insert(OrdemServico obj) {
 		obj.setId(null);
-		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
 		atualizarValorTotal(obj);
 		repo.save(obj);
 		emailService.sendOrderConfirmationEmail(obj);
@@ -75,9 +74,7 @@ public class OrdemServicoService {
 	@Transactional 
 	public OrdemServico update(OrdemServico newObj) {
 		OrdemServico obj = findOne(newObj.getId());
-		
-		//LANÇAR ERRO DE VALIDAÇÃO CASO ALGUM ITEM ESTEJA ERRADO OU NULO
-		
+			
 		obj.getItens().forEach(item -> {
 			if (!newObj.getItens().contains(item)) {
 				itensRepo.deleteById(item.getId());
