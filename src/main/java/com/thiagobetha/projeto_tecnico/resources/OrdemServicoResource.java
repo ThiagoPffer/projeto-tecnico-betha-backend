@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
+import com.thiagobetha.projeto_tecnico.domain.enums.EstadoPagamento;
 import com.thiagobetha.projeto_tecnico.domain.enums.SituacaoOrdemServico;
 import com.thiagobetha.projeto_tecnico.dto.OrdemServicoDTO;
 import com.thiagobetha.projeto_tecnico.dto.OrdemServicoListDTO;
@@ -76,6 +77,14 @@ public class OrdemServicoResource {
 			@Valid @RequestParam(value="value") SituacaoOrdemServico situacao, 
 			@PathVariable Integer id){
 		service.updateSituacao(situacao, id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value="/{id}/pagamentos", method=RequestMethod.PUT)
+	public ResponseEntity<Void> updateEstadoPagamento(
+			@Valid @RequestParam(value="value") EstadoPagamento estado, 
+			@PathVariable Integer id){
+		service.updateEstadoPagamento(estado, id);
 		return ResponseEntity.noContent().build();
 	}
 	

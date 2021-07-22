@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.thiagobetha.projeto_tecnico.domain.Cliente;
 import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
+import com.thiagobetha.projeto_tecnico.domain.enums.EstadoPagamento;
 import com.thiagobetha.projeto_tecnico.domain.enums.SituacaoOrdemServico;
 import com.thiagobetha.projeto_tecnico.dto.OrdemServicoDTO;
 import com.thiagobetha.projeto_tecnico.repositories.ItensRepository;
@@ -89,10 +90,25 @@ public class OrdemServicoService {
 	@Transactional
 	public OrdemServico updateSituacao(SituacaoOrdemServico situacao, Integer id){
 		OrdemServico obj = findOne(id);
+		
+		//criar metodo verificaSituacao(situacao)
+		
 		obj.setSituacao(situacao);
-		if(obj.getSituacao() == SituacaoOrdemServico.AGUARDANDO_DECISAO) {
+		
+		if(obj.getSituacao() == SituacaoOrdemServico.CANCELADA) {
+			updateEstadoPagamento(EstadoPagamento.CANCELADO, id);
+		}
+		else if(obj.getSituacao() == SituacaoOrdemServico.AGUARDANDO_DECISAO) {
 			emailService.sendOrderConfirmationEmail(obj);
 		}
+		
+		return repo.save(obj);
+	}
+	
+	@Transactional
+	public OrdemServico updateEstadoPagamento(EstadoPagamento estado, Integer id){
+		OrdemServico obj = findOne(id);
+		obj.setPagamento(estado);
 		return repo.save(obj);
 	}
 
