@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.thiagobetha.projeto_tecnico.services.exceptions.DataIntegrityException;
+import com.thiagobetha.projeto_tecnico.services.exceptions.InvalidSituationException;
 import com.thiagobetha.projeto_tecnico.services.exceptions.ObjectNotFoundException;
 
 @ControllerAdvice
@@ -80,6 +81,16 @@ public class ResourceExceptionHandler {
 			MissingServletRequestParameterException resError, 
 			HttpServletRequest request){
 		
+		StandardError err = new StandardError(
+				HttpStatus.BAD_REQUEST.value(), 
+				resError.getMessage(), 
+				LocalDateTime.now());
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
+	@ExceptionHandler(InvalidSituationException.class)
+	public ResponseEntity<StandardError> invalidSituation(InvalidSituationException resError, HttpServletRequest request){
 		StandardError err = new StandardError(
 				HttpStatus.BAD_REQUEST.value(), 
 				resError.getMessage(), 

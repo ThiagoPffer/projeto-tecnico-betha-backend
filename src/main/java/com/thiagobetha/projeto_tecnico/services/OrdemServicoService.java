@@ -20,6 +20,8 @@ import com.thiagobetha.projeto_tecnico.domain.enums.SituacaoOrdemServico;
 import com.thiagobetha.projeto_tecnico.dto.OrdemServicoDTO;
 import com.thiagobetha.projeto_tecnico.repositories.ItensRepository;
 import com.thiagobetha.projeto_tecnico.repositories.OrdemServicoRepository;
+import com.thiagobetha.projeto_tecnico.services.exceptions.DataIntegrityException;
+import com.thiagobetha.projeto_tecnico.services.exceptions.InvalidSituationException;
 import com.thiagobetha.projeto_tecnico.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -76,7 +78,11 @@ public class OrdemServicoService {
 	@Transactional 
 	public OrdemServico update(OrdemServico newObj) {
 		OrdemServico obj = findOne(newObj.getId());
-			
+		
+		if(!obj.getSituacao().equals(SituacaoOrdemServico.EM_ANALISE)) {
+			throw new DataIntegrityException("Não é possível alterar dados de uma ordem na seguinte situação: " + obj.getSituacao());
+		}
+		
 		obj.getItens().forEach(item -> {
 			if (!newObj.getItens().contains(item)) {
 				itensRepo.deleteById(item.getId());
@@ -90,18 +96,14 @@ public class OrdemServicoService {
 	@Transactional
 	public OrdemServico updateSituacao(SituacaoOrdemServico situacao, Integer id){
 		OrdemServico obj = findOne(id);
-		
-		//criar metodo verificaSituacao(situacao)
-		
+		verificaSituacao(situacao, obj.getSituacao());
 		obj.setSituacao(situacao);
 		
-		if(obj.getSituacao() == SituacaoOrdemServico.CANCELADA) {
+		if(obj.getSituacao().equals(SituacaoOrdemServico.CANCELADA)) {
 			updateEstadoPagamento(EstadoPagamento.CANCELADO, id);
 		}
-		else if(obj.getSituacao() == SituacaoOrdemServico.AGUARDANDO_DECISAO) {
-			emailService.sendOrderConfirmationEmail(obj);
-		}
 		
+		sendEmail(obj);
 		return repo.save(obj);
 	}
 	
@@ -134,6 +136,49 @@ public class OrdemServicoService {
 		obj.setValorTotal(BigDecimal.ZERO);
 		for(ItemOrdemServico item : list) {
 			obj.setValorTotal(item.getOrcamento());
+		}
+	}
+	
+	private void verificaSituacao(SituacaoOrdemServico newSituacao, SituacaoOrdemServico situacao) {
+		
+		//Checa se a nova situacao é válida, comparando com a situação atual.
+		switch(situacao.getCod()) {
+			case 1: //EM_ANALISE
+				if(newSituacao.equals(SituacaoOrdemServico.APROVADA) 
+						|| newSituacao.equals(SituacaoOrdemServico.CONCLUIDA)) {
+					throw new InvalidSituationException("Mudança inválida de situação: " + situacao + " para " + newSituacao);
+				}
+				break;
+			case 2: //AGUARDANDO_DECISAO
+				if(newSituacao.equals(SituacaoOrdemServico.CONCLUIDA)) {
+					throw new InvalidSituationException("Mudança inválida de situação: " + situacao + " para " + newSituacao);
+				}
+				break;
+			case 3: //APROVADA
+				if(!newSituacao.equals(SituacaoOrdemServico.CONCLUIDA)) {
+					throw new InvalidSituationException("Mudança inválida de situação: " + situacao + " para " + newSituacao);
+				}
+				break;
+			case 4: //CONCLUIDA
+				throw new InvalidSituationException("Mudança inválida de situação: " + situacao + " para " + newSituacao);
+			case 5: //CANCELADA
+				throw new InvalidSituationException("Mudança inválida de situação: " + situacao + " para " + newSituacao);
+		}
+
+	}
+	
+	private void sendEmail(OrdemServico obj) {
+		
+		switch(obj.getSituacao().getCod()) {
+			case 2: 
+				emailService.sendOrderConfirmationEmail(obj);
+				break;
+			case 4:
+				//emailService.sendOrderConclusionEmail(obj);
+				break;
+			case 5:
+				//emailService.sendCancellationConfirmationEmail(obj);
+				break;
 		}
 	}
 	

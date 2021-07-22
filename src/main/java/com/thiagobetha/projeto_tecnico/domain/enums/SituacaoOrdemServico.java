@@ -1,8 +1,8 @@
 package com.thiagobetha.projeto_tecnico.domain.enums;
 
 public enum SituacaoOrdemServico {
-	EM_ANALISE(1, "Em Análise"), AGUARDANDO_DECISAO(2, "Aguardando Decisão"), APROVADA(3, "Aprovada"), REPROVADA(4, "Reprovada"),
-	CONCLUIDA(5, "Concluída"), CANCELADA(6, "Cancelada");
+	EM_ANALISE(1, "Em Análise"), AGUARDANDO_DECISAO(2, "Aguardando Decisão"), APROVADA(3, "Aprovada"), 
+	CONCLUIDA(4, "Concluída"), CANCELADA(5, "Cancelada");
 	
 	private int cod;
 	private String desc;
