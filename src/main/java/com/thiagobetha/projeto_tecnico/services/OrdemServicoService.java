@@ -87,7 +87,7 @@ public class OrdemServicoService {
 	}
 	
 	@Transactional
-	public OrdemServico updateSituacao(SituacaoOrdemServico situacao, Integer id) {
+	public OrdemServico updateSituacao(SituacaoOrdemServico situacao, Integer id){
 		OrdemServico obj = findOne(id);
 		obj.setSituacao(situacao);
 		if(obj.getSituacao() == SituacaoOrdemServico.AGUARDANDO_DECISAO) {

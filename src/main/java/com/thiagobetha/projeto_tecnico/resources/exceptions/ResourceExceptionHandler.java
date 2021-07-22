@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -71,6 +72,19 @@ public class ResourceExceptionHandler {
 				HttpStatus.BAD_REQUEST.value(), 
 				resError.getMessage(), 
 				LocalDateTime.now());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
+	@ExceptionHandler(MissingServletRequestParameterException.class)
+	public ResponseEntity<StandardError> missingReqParameter(
+			MissingServletRequestParameterException resError, 
+			HttpServletRequest request){
+		
+		StandardError err = new StandardError(
+				HttpStatus.BAD_REQUEST.value(), 
+				resError.getMessage(), 
+				LocalDateTime.now());
+		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
 }
