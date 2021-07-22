@@ -174,10 +174,10 @@ public class OrdemServicoService {
 				emailService.sendOrderConfirmationEmail(obj);
 				break;
 			case 4:
-				//emailService.sendOrderConclusionEmail(obj);
+				emailService.sendOrderConclusionEmail(obj);
 				break;
 			case 5:
-				//emailService.sendCancellationConfirmationEmail(obj);
+				emailService.sendCancellationConfirmationEmail(obj);
 				break;
 		}
 	}

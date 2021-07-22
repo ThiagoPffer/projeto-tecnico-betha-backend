@@ -8,5 +8,9 @@ public interface EmailService {
 	
 	void sendOrderConfirmationEmail(OrdemServico obj);
 	
+	void sendOrderConclusionEmail(OrdemServico obj);
+	
+	void sendCancellationConfirmationEmail(OrdemServico obj);
+	
 	void sendEmail(SimpleMailMessage msg);
 }
