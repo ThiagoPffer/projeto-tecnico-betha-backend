@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.thiagobetha.projeto_tecnico.domain.Cliente;
@@ -20,6 +21,8 @@ import com.thiagobetha.projeto_tecnico.repositories.OrdemServicoRepository;
 public class DBService {
 	
 	@Autowired
+	private BCryptPasswordEncoder passEncoder;
+	@Autowired
 	private OrdemServicoRepository ordemServicoRepo;
 	@Autowired
 	private ClienteRepository clienteRepo;
@@ -28,9 +31,9 @@ public class DBService {
 	
 	public void instantiateTestDatabase() {
 		
-		Funcionario adm = new Funcionario("Rodrigo Branas", "branas.rodrigoadm@gmail.com", 1);
-		Funcionario recep = new Funcionario("Rodrigo Branas", "branas.rodrigorecep@gmail.com", 2);
-		Funcionario tec = new Funcionario("Rodrigo Branas", "branas.rodrigotec@gmail.com", 3);
+		Funcionario adm = new Funcionario("Rodrigo Branas", "branas.rodrigoadm@gmail.com", 1, passEncoder.encode("admin"));
+		Funcionario recep = new Funcionario("Rodrigo Branas", "branas.rodrigorecep@gmail.com", 2, passEncoder.encode("recep"));
+		Funcionario tec = new Funcionario("Rodrigo Branas", "branas.rodrigotec@gmail.com", 3, passEncoder.encode("tecnico"));
 		
 		Cliente cli1 = new Cliente("Thiago", "thiago.piffer@hotmail.com", "48998665287");
 		Endereco end1 = new Endereco(cli1, "Rua dos Correios Privatizados", "786", "Coloninha", "Araranguá", "Santa Catarina");

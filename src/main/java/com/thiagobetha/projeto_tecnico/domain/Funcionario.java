@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thiagobetha.projeto_tecnico.domain.enums.TipoFuncionario;
 
 @Entity
@@ -21,22 +22,30 @@ public class Funcionario implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
 	@NotEmpty(message = "Preenchimento obrigatório!")
 	@Length(min = 2, message = "Insira um nome válido")
 	private String nome;
+	
 	@NotEmpty(message = "Preenchimento obrigatório!")
 	@Email(message = "Insira um email válido!")
 	private String email;
+	
+	@JsonIgnore
+	@NotEmpty(message = "Preenchimento obrigatório!")
+	private String senha;
+	
 	@NotNull(message = "Não pode ser nulo!")
 	private Integer tipo;
 	
 	public Funcionario() {}
 	
-	public Funcionario(String nome, String email, Integer tipo) {
+	public Funcionario(String nome, String email, Integer tipo, String senha) {
 		super();
 		this.nome = nome;
 		this.email = email;
 		this.tipo = tipo;
+		this.senha = senha;
 	}
 
 	public Integer getId() {
@@ -63,6 +72,14 @@ public class Funcionario implements Serializable{
 		this.email = email;
 	}
 
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+	
 	public TipoFuncionario getTipo() {
 		return TipoFuncionario.toEnum(tipo);
 	}
@@ -95,5 +112,7 @@ public class Funcionario implements Serializable{
 			return false;
 		return true;
 	}
+
+
 	
 }

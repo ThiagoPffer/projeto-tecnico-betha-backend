@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.thiagobetha.projeto_tecnico.domain.Funcionario;
@@ -17,6 +18,9 @@ import com.thiagobetha.projeto_tecnico.services.exceptions.ObjectNotFoundExcepti
 
 @Service
 public class FuncionarioService {
+	
+	@Autowired
+	private BCryptPasswordEncoder passEncoder;
 	
 	@Autowired
 	private FuncionarioRepository repo;
@@ -48,6 +52,7 @@ public class FuncionarioService {
 			throw new IllegalArgumentException("Email já existente!");
 		}
 		obj.setId(null);
+		obj.setSenha(passEncoder.encode(obj.getSenha()));
 		return repo.save(obj);
 	}
 	
