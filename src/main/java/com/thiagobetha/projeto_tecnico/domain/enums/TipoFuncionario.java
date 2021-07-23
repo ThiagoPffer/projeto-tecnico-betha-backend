@@ -1,7 +1,7 @@
 package com.thiagobetha.projeto_tecnico.domain.enums;
 
 public enum TipoFuncionario {
-	ADMINISTRADOR(1, "Administrador"), RECEPCIONISTA(2, "Recepcionista"), TECNICO(3, "Técnico");
+	ADMINISTRADOR(1, "ROLE_ADMIN"), RECEPCIONISTA(2, "ROLE_RECEPCIONISTA"), TECNICO(3, "ROLE_TECNICO");
 	
 	private int cod;
 	private String desc;
