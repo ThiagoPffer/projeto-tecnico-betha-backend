@@ -34,7 +34,7 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(list);
 	}
 	
-	@PreAuthorize("hasAnyRole('RECEPCIONISTA', 'TECNICO')")
+	
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
 	public ResponseEntity<Page<Cliente>> listPage(
 			@RequestParam(value="page", defaultValue = "0") Integer page, 
@@ -45,14 +45,13 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(list);
 	}
 	
-	@PreAuthorize("hasAnyRole('RECEPCIONISTA', 'TECNICO')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Cliente> getOne(@PathVariable Integer id) {
 		Cliente obj = service.findOne(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
-	@PreAuthorize("hasAnyRole('RECEPCIONISTA')")
+	@PreAuthorize("hasAnyRole('RECEPCIONISTA', 'ADMIN')")
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody ClientePostDTO newObj) {
 		Cliente obj = service.fromDTO(newObj);
@@ -62,7 +61,7 @@ public class ClienteResource {
 		return ResponseEntity.created(uri).build();
 	}
 
-	@PreAuthorize("hasAnyRole('RECEPCIONISTA')")
+	@PreAuthorize("hasAnyRole('RECEPCIONISTA', 'ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody ClientePostDTO objDto, @PathVariable Integer id){
 		Cliente obj = service.fromDTO(objDto);
@@ -71,7 +70,7 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PreAuthorize("hasAnyRole('RECEPCIONISTA')")
+	@PreAuthorize("hasAnyRole('RECEPCIONISTA', 'ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);

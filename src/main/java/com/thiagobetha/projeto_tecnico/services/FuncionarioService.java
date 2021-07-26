@@ -13,7 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.thiagobetha.projeto_tecnico.domain.Funcionario;
+import com.thiagobetha.projeto_tecnico.dto.FuncionarioDTO;
 import com.thiagobetha.projeto_tecnico.repositories.FuncionarioRepository;
+import com.thiagobetha.projeto_tecnico.services.exceptions.DataIntegrityException;
 import com.thiagobetha.projeto_tecnico.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -57,16 +59,24 @@ public class FuncionarioService {
 	}
 	
 	@Transactional
-	public Funcionario update(Funcionario newObj) {
-		findOne(newObj.getId());
-		if(repo.findByEmail(newObj.getEmail()) != null) {
+	public FuncionarioDTO update(FuncionarioDTO newObj) {
+		Funcionario obj = findOne(newObj.getId());
+		Funcionario auxObj = repo.findByEmail(newObj.getEmail());
+		if(auxObj != null && auxObj.getId() != newObj.getId()) {
 			throw new IllegalArgumentException("Email já existente!");
 		}
-		return repo.save(newObj);
+		obj.setEmail(newObj.getEmail());
+		obj.setNome(newObj.getNome());
+		obj.setTipo(newObj.getTipo());
+		repo.save(obj);
+		return newObj;
 	}
 	
 	public void delete(Integer id) {
 		findOne(id);
+		if(UserService.authenticated().getId() == id) {
+			throw new DataIntegrityException("Não é possível deletar sua própria conta!");
+		}
 		repo.deleteById(id);
 	}
 }

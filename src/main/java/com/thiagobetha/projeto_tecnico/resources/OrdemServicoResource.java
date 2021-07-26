@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +55,8 @@ public class OrdemServicoResource {
 		OrdemServico obj = service.findOne(id);
 		return ResponseEntity.ok().body(obj);
 	}
-	
+
+	@PreAuthorize("hasAnyRole('RECEPCIONISTA', 'ADMIN')")
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody OrdemServicoDTO newObj){
 		OrdemServico obj = service.fromDTO(newObj);
@@ -64,6 +66,8 @@ public class OrdemServicoResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	//PUT para realizar alterações na ordem de serviço: ID do cliente e itens.
+	@PreAuthorize("hasAnyRole('RECEPCIONISTA', 'TECNICO', 'ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody OrdemServicoDTO objDto, @PathVariable Integer id){
 		OrdemServico obj = service.fromDTO(objDto);
@@ -72,6 +76,7 @@ public class OrdemServicoResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@PreAuthorize("hasAnyRole('TECNICO', 'ADMIN')")
 	@RequestMapping(value="/{id}/situacoes", method=RequestMethod.PUT)
 	public ResponseEntity<Void> updateSituacao(
 			@Valid @RequestParam(value="value") SituacaoOrdemServico situacao, 
@@ -80,6 +85,7 @@ public class OrdemServicoResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@PreAuthorize("hasAnyRole('RECEPCIONISTA', 'ADMIN')")
 	@RequestMapping(value="/{id}/pagamentos", method=RequestMethod.PUT)
 	public ResponseEntity<Void> updateEstadoPagamento(
 			@Valid @RequestParam(value="value") EstadoPagamento estado, 
@@ -88,6 +94,7 @@ public class OrdemServicoResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@PreAuthorize("hasAnyRole('RECEPCIONISTA', 'ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
