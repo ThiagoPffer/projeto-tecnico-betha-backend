@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 
+import com.thiagobetha.projeto_tecnico.domain.Funcionario;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
 
 public abstract class AbstractEmailService implements EmailService{
@@ -79,6 +80,22 @@ public abstract class AbstractEmailService implements EmailService{
 				"\nDados da ordem: \n"+
 				obj.toString()
 				);
+		return sm;
+	}
+	
+	@Override
+	public void sendNewPasswordEmail(Funcionario funcionario, String newPass) {
+		SimpleMailMessage sm = prepareNewPasswordEmail(funcionario, newPass);
+		sendEmail(sm);
+	}
+
+	protected SimpleMailMessage prepareNewPasswordEmail(Funcionario funcionario, String newPass) {
+		SimpleMailMessage sm = new SimpleMailMessage();
+		sm.setTo(funcionario.getEmail());
+		sm.setFrom(sender);
+		sm.setSubject("Solicitação de nova senha");
+		sm.setSentDate(new Date(System.currentTimeMillis()));
+		sm.setText("Nova senha: " + newPass);
 		return sm;
 	}
 	
