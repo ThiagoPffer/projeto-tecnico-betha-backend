@@ -8,6 +8,7 @@ import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -97,5 +98,15 @@ public class ResourceExceptionHandler {
 				LocalDateTime.now());
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<StandardError> accessDenied(AccessDeniedException resError, HttpServletRequest request){
+		StandardError err = new StandardError(
+				HttpStatus.FORBIDDEN.value(), 
+				resError.getMessage(), 
+				LocalDateTime.now());
+		
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
 	}
 }

@@ -1,8 +1,6 @@
 package com.thiagobetha.projeto_tecnico.security;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -17,28 +15,20 @@ public class UserSS implements UserDetails{
 	private Integer id;
 	private String email;
 	private String senha;
-	private TipoFuncionario tipo;
+	private Collection<? extends GrantedAuthority> authorities;
 	
 	public UserSS() {}
 	
-	public UserSS(Integer id, String email, String senha, TipoFuncionario tipo) {
+	public UserSS(Integer id, String email, String senha, Collection<TipoFuncionario> tipo) {
 		super();
 		this.id = id;
 		this.email = email;
 		this.senha = senha;
-		this.tipo = tipo;
+		this.authorities = tipo.stream().map(item -> new SimpleGrantedAuthority(item.getDesc())).collect(Collectors.toList());
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Set<TipoFuncionario> tipoSet = new HashSet<>();
-		tipoSet.add(tipo);
-		
-		Collection<? extends GrantedAuthority> authorities = 
-				tipoSet.stream()
-				.map(item -> new SimpleGrantedAuthority(item.getDesc()))
-				.collect(Collectors.toList());
-		
 		return authorities;
 	}
 
@@ -74,6 +64,11 @@ public class UserSS implements UserDetails{
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+	
+	public boolean hasRole(TipoFuncionario tipo) {
+		System.out.println(getAuthorities());
+		return getAuthorities().contains(new SimpleGrantedAuthority(tipo.getDesc()));
 	}
 
 }

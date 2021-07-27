@@ -47,7 +47,6 @@ public class FuncionarioResource {
 		return ResponseEntity.ok().body(listDTO);
 	}
 	
-	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<FuncionarioDTO> getOne(@PathVariable Integer id){
 		Funcionario obj = service.findOne(id);

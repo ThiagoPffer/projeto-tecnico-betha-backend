@@ -9,12 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.thiagobetha.projeto_tecnico.domain.Funcionario;
+import com.thiagobetha.projeto_tecnico.domain.enums.TipoFuncionario;
 import com.thiagobetha.projeto_tecnico.dto.FuncionarioDTO;
 import com.thiagobetha.projeto_tecnico.repositories.FuncionarioRepository;
+import com.thiagobetha.projeto_tecnico.security.UserSS;
 import com.thiagobetha.projeto_tecnico.services.exceptions.DataIntegrityException;
 import com.thiagobetha.projeto_tecnico.services.exceptions.ObjectNotFoundException;
 
@@ -44,6 +47,12 @@ public class FuncionarioService {
 	}
 	
 	public Funcionario findOne(Integer id) {
+		
+		UserSS user = UserService.authenticated();
+		if(user==null || !user.hasRole(TipoFuncionario.ADMINISTRADOR) && !id.equals(user.getId())) {
+			throw new AccessDeniedException("Acesso negado!");
+		}
+		
 		Optional<Funcionario> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Nenhum funcionario de id " + id + " foi encontrado!"));
 	}

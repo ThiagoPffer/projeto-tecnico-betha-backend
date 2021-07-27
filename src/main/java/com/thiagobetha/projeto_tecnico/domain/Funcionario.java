@@ -33,7 +33,7 @@ public class Funcionario implements Serializable{
 	@NotEmpty(message = "Preenchimento obrigatório!")
 	private String senha;
 	
-	@NotNull(message = "Não pode ser nulo!")
+	@NotNull(message = "Valor não pode ser nulo!")
 	private Integer tipo;
 	
 	public Funcionario() {}
