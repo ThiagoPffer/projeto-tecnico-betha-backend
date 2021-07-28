@@ -33,6 +33,18 @@ public abstract class AbstractEmailService implements EmailService{
 		sendEmail(sm);
 	}
 	
+	@Override
+	public void sendPasswordRequestEmail(Funcionario funcionario, String newPass) {
+		SimpleMailMessage sm = preparePasswordRequestEmail(funcionario, newPass);
+		sendEmail(sm);
+	}
+	
+	@Override
+	public void sendNewPasswordEmail(Funcionario funcionario, String newPass) {
+		SimpleMailMessage sm = prepareNewPasswordEmail(funcionario, newPass);
+		sendEmail(sm);
+	}
+	
 	protected SimpleMailMessage prepareOrderConfirmationEmail(OrdemServico obj) {
 		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 		SimpleMailMessage sm = new SimpleMailMessage();
@@ -83,12 +95,17 @@ public abstract class AbstractEmailService implements EmailService{
 		return sm;
 	}
 	
-	@Override
-	public void sendNewPasswordEmail(Funcionario funcionario, String newPass) {
-		SimpleMailMessage sm = prepareNewPasswordEmail(funcionario, newPass);
-		sendEmail(sm);
+	protected SimpleMailMessage preparePasswordRequestEmail(Funcionario funcionario, String token) {
+		SimpleMailMessage sm = new SimpleMailMessage();
+		sm.setTo(funcionario.getEmail());
+		sm.setFrom(sender);
+		sm.setSubject("Solicitação de nova senha");
+		sm.setSentDate(new Date(System.currentTimeMillis()));
+		sm.setText("Clique para mudar a senha: \n" 
+		+ "http://localhost:8080/auth/newpassword?token=" + token);
+		return sm;
 	}
-
+	
 	protected SimpleMailMessage prepareNewPasswordEmail(Funcionario funcionario, String newPass) {
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(funcionario.getEmail());

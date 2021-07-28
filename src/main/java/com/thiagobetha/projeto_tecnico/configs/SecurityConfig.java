@@ -45,6 +45,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			"/auth/forgot/**"
 	};
 	
+	private static final String[] PUBLIC_MATCHERS_PUT = {//NOVO
+			"/auth/newpassword/**"
+	};
+	
 	@Override
 	protected void configure (HttpSecurity http) throws Exception{
 		
@@ -56,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.authorizeRequests()
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
 			.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+			.antMatchers(HttpMethod.PUT, PUBLIC_MATCHERS_PUT).permitAll()//NOVO
 			.anyRequest().authenticated();
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));

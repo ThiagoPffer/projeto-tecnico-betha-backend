@@ -1,8 +1,8 @@
 package com.thiagobetha.projeto_tecnico.security;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -70,11 +70,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
         
         private String json() {
-            long date = new Date().getTime();
-            return "{\"timestamp\": " + date + ", "
+            return "{\"timestamp\": " + LocalDateTime.now() + ", "
                 + "\"status\": 401, "
-                + "\"error\": \"Não autorizado\", "
-                + "\"message\": \"Email ou senha inválidos\", "
+                + "\"error\": \"Nao autorizado\", "
+                + "\"message\": \"Email ou senha invalidos\", "
                 + "\"path\": \"/login\"}";
         }
     }

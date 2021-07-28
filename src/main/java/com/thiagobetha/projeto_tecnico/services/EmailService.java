@@ -15,5 +15,7 @@ public interface EmailService {
 	
 	void sendEmail(SimpleMailMessage msg);
 	
+	void sendPasswordRequestEmail(Funcionario funcionario, String newPass);
+
 	void sendNewPasswordEmail(Funcionario funcionario, String newPass);
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.thiagobetha.projeto_tecnico.domain.Funcionario;
 import com.thiagobetha.projeto_tecnico.repositories.FuncionarioRepository;
+import com.thiagobetha.projeto_tecnico.security.JWTUtil;
 import com.thiagobetha.projeto_tecnico.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -20,11 +21,42 @@ public class AuthService {
 	private FuncionarioRepository funcionarioRepo;
 	
 	@Autowired
+	private JWTUtil jwtUtil;
+	
+	@Autowired
 	private EmailService emailService;
 	
 	private Random random = new Random();
 	
 	public void sendNewPassword(String email) {
+		Funcionario funcionario = funcionarioRepo.findByEmail(email);
+		if(funcionario == null) {
+			throw new ObjectNotFoundException("Funcionário não encontrado!");
+		}
+		
+		String token = jwtUtil.generateToken(email);	
+		emailService.sendPasswordRequestEmail(funcionario, token);
+	}
+	
+	public void setNewPassword(String token) {
+		if(!jwtUtil.tokenValido(token)) {
+			throw new IllegalArgumentException("O token da requisição é inválido!");
+		}
+		String email = jwtUtil.getUsername(token);
+		
+		Funcionario funcionario = funcionarioRepo.findByEmail(email);
+		if(funcionario == null) {
+			throw new ObjectNotFoundException("Funcionário não encontrado!");
+		}
+		
+		String newPass = newPassword();
+		funcionario.setSenha(passEncoder.encode(newPass));;
+		funcionarioRepo.save(funcionario);
+		
+		emailService.sendNewPasswordEmail(funcionario, newPass);
+	}
+	
+	/*public void sendNewPassword(String email) {
 		Funcionario funcionario = funcionarioRepo.findByEmail(email);
 		
 		if(funcionario == null) {
@@ -36,7 +68,7 @@ public class AuthService {
 		
 		funcionarioRepo.save(funcionario);
 		emailService.sendNewPasswordEmail(funcionario, newPass);
-	}
+	}*/
 	
 	private String newPassword() {
 		char[] password = new char[10];

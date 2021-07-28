@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thiagobetha.projeto_tecnico.dto.EmailDTO;
@@ -37,6 +38,12 @@ public class AuthResource {
 	@RequestMapping(value = "/forgot", method = RequestMethod.POST)
 	public ResponseEntity<Void> forgotPass(@Valid @RequestBody EmailDTO email) {
 		service.sendNewPassword(email.getEmail());
+		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value="/newpassword", method=RequestMethod.PUT)
+	public ResponseEntity<Void> updatePass(@Valid @RequestParam(value="token") String token){
+		service.setNewPassword(token);
 		return ResponseEntity.noContent().build();
 	}
 }
