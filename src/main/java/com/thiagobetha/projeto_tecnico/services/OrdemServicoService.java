@@ -1,6 +1,7 @@
 package com.thiagobetha.projeto_tecnico.services;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.thiagobetha.projeto_tecnico.domain.Cliente;
 import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
@@ -38,6 +40,9 @@ public class OrdemServicoService {
 	
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private S3Service s3Service;
 	
 	public List<OrdemServico> findAll(){
 		List<OrdemServico> list = repo.findAll();
@@ -180,6 +185,10 @@ public class OrdemServicoService {
 				emailService.sendCancellationConfirmationEmail(obj);
 				break;
 		}
+	}
+	
+	public URI uploadItensPictures(MultipartFile multipartFile) {
+		return s3Service.uploadFile(multipartFile);
 	}
 	
 }
