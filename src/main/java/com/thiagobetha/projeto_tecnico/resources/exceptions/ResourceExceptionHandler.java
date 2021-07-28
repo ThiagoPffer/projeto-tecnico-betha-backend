@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -153,5 +154,17 @@ public class ResourceExceptionHandler {
 				LocalDateTime.now());
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public ResponseEntity<StandardError> reqMethodNotSupported(
+			HttpRequestMethodNotSupportedException resError, 
+			HttpServletRequest request){
+		StandardError err = new StandardError(
+				HttpStatus.METHOD_NOT_ALLOWED.value(), 
+				resError.getMessage(),
+				LocalDateTime.now());
+		
+		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(err);
 	}
 }
