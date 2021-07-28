@@ -3,14 +3,18 @@ package com.thiagobetha.projeto_tecnico.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
@@ -34,6 +38,9 @@ public class ItemOrdemServico  implements Serializable{
 	private String avaria;
 	private BigDecimal orcamento = BigDecimal.ZERO;
 	
+	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+	private List<ItemImagem> imagens = new ArrayList<>();
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="ordemServico_id")
@@ -91,6 +98,14 @@ public class ItemOrdemServico  implements Serializable{
 
 	public void setOrcamento(BigDecimal orcamento) {
 		this.orcamento = orcamento;
+	}
+	
+	public List<ItemImagem> getImagens() {
+		return imagens;
+	}
+
+	public void addImagens(ItemImagem imagem) {
+		imagens.add(imagem);
 	}
 	
 	public OrdemServico getOrdemServico() {

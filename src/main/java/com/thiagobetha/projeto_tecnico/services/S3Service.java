@@ -51,4 +51,10 @@ public class S3Service {
 			throw new FileException("Erro ao converter URL para URI!");
 		}
 	}
+	
+	public void deleteFile(String nomeArquivo) {
+		LOG.info("Deletando arquivo...");
+		s3client.deleteObject(bucketName, nomeArquivo);
+		LOG.info("Arquivo deletado!");
+	}
 }

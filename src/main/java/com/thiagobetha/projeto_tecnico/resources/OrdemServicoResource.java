@@ -70,8 +70,11 @@ public class OrdemServicoResource {
 	//upload de fotos
 	@PreAuthorize("hasAnyRole('TECNICO', 'ADMIN')")
 	@RequestMapping(value = "/{id}/itens/{idItem}/fotos", method = RequestMethod.POST)
-	public ResponseEntity<Void> insertPicture(@RequestParam(name = "file") MultipartFile file){
-		URI uri = service.uploadItensPictures(file);
+	public ResponseEntity<Void> insertPicture(
+			@PathVariable Integer id, 
+			@PathVariable Integer idItem, 
+			@RequestParam(name = "file") MultipartFile file){
+		URI uri = service.uploadItensPictures(id, idItem, file);
 		return ResponseEntity.created(uri).build();
 	}
 	
@@ -107,6 +110,16 @@ public class OrdemServicoResource {
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PreAuthorize("hasAnyRole('TECNICO', 'ADMIN')")
+	@RequestMapping(value="/{id}/itens/{idItem}/fotos/{idImagem}", method=RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(
+			@PathVariable Integer id, 
+			@PathVariable Integer idItem, 
+			@PathVariable Integer idImagem) {
+		service.deleteItensPictures(idImagem);
 		return ResponseEntity.noContent().build();
 	}
 	

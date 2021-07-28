@@ -15,11 +15,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.thiagobetha.projeto_tecnico.domain.Cliente;
+import com.thiagobetha.projeto_tecnico.domain.ItemImagem;
 import com.thiagobetha.projeto_tecnico.domain.ItemOrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.enums.EstadoPagamento;
 import com.thiagobetha.projeto_tecnico.domain.enums.SituacaoOrdemServico;
 import com.thiagobetha.projeto_tecnico.dto.OrdemServicoDTO;
+import com.thiagobetha.projeto_tecnico.repositories.ItemImagensRepository;
 import com.thiagobetha.projeto_tecnico.repositories.ItensRepository;
 import com.thiagobetha.projeto_tecnico.repositories.OrdemServicoRepository;
 import com.thiagobetha.projeto_tecnico.services.exceptions.DataIntegrityException;
@@ -33,10 +35,13 @@ public class OrdemServicoService {
 	private OrdemServicoRepository repo;
 	
 	@Autowired
-	private ClienteService clienteService;
-
-	@Autowired
 	private ItensRepository itensRepo;
+	
+	@Autowired
+	private ItemImagensRepository itemImagensRepo;
+	
+	@Autowired
+	private ClienteService clienteService;
 	
 	@Autowired
 	private EmailService emailService;
@@ -187,8 +192,23 @@ public class OrdemServicoService {
 		}
 	}
 	
-	public URI uploadItensPictures(MultipartFile multipartFile) {
-		return s3Service.uploadFile(multipartFile);
+	public URI uploadItensPictures(Integer id, Integer idItem, MultipartFile multipartFile) {
+		ItemOrdemServico item = itensRepo.findById(idItem)
+				.orElseThrow(() -> new ObjectNotFoundException("Item de id "+idItem+" não encontrado!"));;
+
+		URI uri = s3Service.uploadFile(multipartFile);
+		ItemImagem itemImg = new ItemImagem(uri.toString(), item);
+		item.addImagens(itemImg);
+		itensRepo.save(item);
+		return uri;
+	}
+	
+	public void deleteItensPictures(Integer idImagem) {
+		ItemImagem itemImg = itemImagensRepo.findById(idImagem)
+				.orElseThrow(() -> new ObjectNotFoundException("Imagem de id "+idImagem+" não encontrada!"));
+		
+		s3Service.deleteFile(itemImg.getNomeArquivo());
+		itemImagensRepo.deleteById(idImagem);
 	}
 	
 }
