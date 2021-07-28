@@ -15,7 +15,11 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.thiagobetha.projeto_tecnico.services.exceptions.DataIntegrityException;
+import com.thiagobetha.projeto_tecnico.services.exceptions.FileException;
 import com.thiagobetha.projeto_tecnico.services.exceptions.InvalidSituationException;
 import com.thiagobetha.projeto_tecnico.services.exceptions.ObjectNotFoundException;
 
@@ -108,5 +112,46 @@ public class ResourceExceptionHandler {
 				LocalDateTime.now());
 		
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+	}
+	
+	@ExceptionHandler(FileException.class)
+	public ResponseEntity<StandardError> file(FileException resError, HttpServletRequest request){
+		StandardError err = new StandardError(
+				HttpStatus.BAD_REQUEST.value(), 
+				resError.getMessage(), 
+				LocalDateTime.now());
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
+	@ExceptionHandler(AmazonServiceException.class)
+	public ResponseEntity<StandardError> amazonService(AmazonServiceException resError, HttpServletRequest request){
+		HttpStatus code = HttpStatus.valueOf(resError.getErrorCode());
+		StandardError err = new StandardError(
+				code.value(), 
+				resError.getMessage(), 
+				LocalDateTime.now());
+		
+		return ResponseEntity.status(code).body(err);
+	}
+	
+	@ExceptionHandler(AmazonClientException.class)
+	public ResponseEntity<StandardError> amazonClient(AmazonClientException resError, HttpServletRequest request){
+		StandardError err = new StandardError(
+				HttpStatus.BAD_REQUEST.value(), 
+				resError.getMessage(), 
+				LocalDateTime.now());
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
+	@ExceptionHandler(AmazonS3Exception.class)
+	public ResponseEntity<StandardError> amazonS3(AmazonS3Exception resError, HttpServletRequest request){
+		StandardError err = new StandardError(
+				HttpStatus.BAD_REQUEST.value(), 
+				resError.getMessage(), 
+				LocalDateTime.now());
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
 }
