@@ -1,5 +1,6 @@
 package com.thiagobetha.projeto_tecnico.services;
 
+import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
@@ -48,6 +50,15 @@ public class OrdemServicoService {
 	
 	@Autowired
 	private S3Service s3Service;
+	
+	@Autowired
+	private ImageService imageService;
+	
+	@Value("${img.prefix.item.ordemservico}")
+	private String prefix;
+	
+	@Value("${img.default.size}")
+	private Integer size;
 	
 	public List<OrdemServico> findAll(){
 		List<OrdemServico> list = repo.findAll();
@@ -194,12 +205,19 @@ public class OrdemServicoService {
 	
 	public URI uploadItensPictures(Integer id, Integer idItem, MultipartFile multipartFile) {
 		ItemOrdemServico item = itensRepo.findById(idItem)
-				.orElseThrow(() -> new ObjectNotFoundException("Item de id "+idItem+" não encontrado!"));;
+				.orElseThrow(() -> new ObjectNotFoundException("Item de id "+idItem+" não encontrado!"));
 
-		URI uri = s3Service.uploadFile(multipartFile);
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+		jpgImage = imageService.cropSquare(jpgImage);
+		jpgImage = imageService.resize(jpgImage, size);
+		String fileName = prefix + (itemImagensRepo.count()+1) + ".jpg";
+		
+		URI uri = s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
+		
 		ItemImagem itemImg = new ItemImagem(uri.toString(), item);
 		item.addImagens(itemImg);
 		itensRepo.save(item);
+		
 		return uri;
 	}
 	
