@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,9 +35,10 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
 		
 		if(headerAuth != null && headerAuth.startsWith("Bearer ")) {
 			UsernamePasswordAuthenticationToken auth = getAuthentication(headerAuth.substring(7));
-			if(auth != null) {
-				SecurityContextHolder.getContext().setAuthentication(auth);
+			if(auth == null) {
+				throw new AccessDeniedException("Acesso negado!");
 			}
+			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
 		chain.doFilter(request, response);
 	}

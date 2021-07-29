@@ -50,6 +50,12 @@ public class ClienteResource {
 		Cliente obj = service.findOne(id);
 		return ResponseEntity.ok().body(obj);
 	}
+
+	@RequestMapping(value = "/email", method = RequestMethod.GET)
+	public ResponseEntity<Cliente> getOneByEmail(@RequestParam(value="value") String email) {
+		Cliente obj = service.findByEmail(email);
+		return ResponseEntity.ok().body(obj);
+	}
 	
 	@PreAuthorize("hasAnyRole('RECEPCIONISTA', 'ADMIN')")
 	@RequestMapping(method = RequestMethod.POST)

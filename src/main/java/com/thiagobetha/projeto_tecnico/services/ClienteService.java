@@ -41,6 +41,14 @@ public class ClienteService {
 		return repo.findAll(pageReq);
 	}
 	
+	public Cliente findByEmail(String email) {
+		Cliente obj = repo.findByEmail(email);
+		if(obj.equals(null)) {
+			throw new ObjectNotFoundException("Cliente com email "+email+" não encontrado!");
+		}
+		return obj;
+	}
+	
 	public Cliente findOne(Integer id) {
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Cliente de id " + id + " não encontrado!"));
@@ -49,7 +57,7 @@ public class ClienteService {
 	@Transactional
 	public Cliente insert(Cliente obj) {
 		Cliente auxObj = repo.findByEmail(obj.getEmail());
-		if(auxObj != null) {
+		if(!auxObj.equals(null)) {
 			throw new IllegalArgumentException("Email já existente!");
 		}
 		obj.setId(null);
@@ -60,7 +68,7 @@ public class ClienteService {
 	public Cliente update(Cliente newObj) {
 		findOne(newObj.getId());
 		Cliente auxObj = repo.findByEmail(newObj.getEmail());
-		if(auxObj != null && auxObj.getId() != newObj.getId()) {
+		if(!auxObj.equals(null) && !auxObj.getId().equals(newObj.getId())) {
 			throw new IllegalArgumentException("Email já existente!");
 		}
 		/*
