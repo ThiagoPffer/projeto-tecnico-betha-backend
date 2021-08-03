@@ -70,7 +70,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
         
         private String json() {
-            return "{\"timestamp\": " + LocalDateTime.now() + ", "
+        	LocalDateTime dateTime = LocalDateTime.now();
+        	
+            return "{\"timeStamp\": "+"\""+dateTime.toString()+"\""+", "
                 + "\"status\": 401, "
                 + "\"error\": \"Nao autorizado\", "
                 + "\"message\": \"Email ou senha invalidos\", "

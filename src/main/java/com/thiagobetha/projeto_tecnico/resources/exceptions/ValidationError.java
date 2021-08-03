@@ -1,6 +1,5 @@
 package com.thiagobetha.projeto_tecnico.resources.exceptions;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,7 @@ public class ValidationError extends StandardError {
 
 	private List<FieldMessage> errors = new ArrayList<>();
 	
-	public ValidationError(LocalDateTime timeStamp, Integer status, String error, String message, String path) {
+	public ValidationError(String timeStamp, Integer status, String error, String message, String path) {
 		super(timeStamp, status, error, message, path);
 	}
 
