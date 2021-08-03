@@ -30,15 +30,14 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, 
 									HttpServletResponse response, 
-									FilterChain chain) throws IOException, ServletException {
+									FilterChain chain) throws IOException, ServletException, AccessDeniedException {
 		String headerAuth = request.getHeader("Authorization");
 		
 		if(headerAuth != null && headerAuth.startsWith("Bearer ")) {
 			UsernamePasswordAuthenticationToken auth = getAuthentication(headerAuth.substring(7));
-			if(auth == null) {
-				throw new AccessDeniedException("Acesso negado!");
+			if(auth != null) {
+				SecurityContextHolder.getContext().setAuthentication(auth);
 			}
-			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
 		chain.doFilter(request, response);
 	}
