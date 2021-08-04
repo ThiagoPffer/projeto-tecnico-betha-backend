@@ -5,6 +5,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +27,15 @@ public class AuthResource {
 	
 	@Autowired
 	private AuthService service;
+	
+	@RequestMapping(value = "/verify-token", method = RequestMethod.POST)
+	public ResponseEntity<Void> verifyToken(HttpServletResponse response) {
+		UserSS user = UserService.authenticated();
+		if(user.equals(null)) {
+			throw new AccessDeniedException("A sessão do usuário expirou");
+		}
+		return ResponseEntity.noContent().build();
+	}
 	
 	@RequestMapping(value = "/refresh-token", method = RequestMethod.POST)
 	public ResponseEntity<Void> refreshToken(HttpServletResponse response) {
