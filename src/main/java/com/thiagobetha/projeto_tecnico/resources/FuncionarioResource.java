@@ -54,6 +54,12 @@ public class FuncionarioResource {
 		return ResponseEntity.ok().body(objDTO);
 	}
 	
+	@RequestMapping(value = "/email", method = RequestMethod.GET)
+	public ResponseEntity<FuncionarioDTO> getOneByEmail(@RequestParam(value="value") String email) {
+		FuncionarioDTO objDTO = service.findByEmail(email);
+		return ResponseEntity.ok().body(objDTO);
+	}
+	
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@RequestBody Funcionario newObj) {

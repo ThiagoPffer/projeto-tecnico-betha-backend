@@ -57,6 +57,20 @@ public class FuncionarioService {
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Nenhum funcionario de id " + id + " foi encontrado!"));
 	}
 	
+	public FuncionarioDTO findByEmail(String email) {
+		UserSS user = UserService.authenticated();
+		if(user==null || !user.hasRole(TipoFuncionario.ADMINISTRADOR) && !email.equals(user.getUsername())) {
+			throw new AccessDeniedException("Acesso negado!");
+		}
+		
+		Funcionario obj = repo.findByEmail(email);
+		if(obj.equals(null)) {
+			throw new ObjectNotFoundException("Funcionario com email "+email+" não encontrado!");
+		}
+		FuncionarioDTO objDTO = new FuncionarioDTO(obj);
+		return objDTO;
+	}
+	
 	@Transactional
 	public Funcionario insert(Funcionario obj) {
 		if(repo.findByEmail(obj.getEmail()) != null) {
