@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
@@ -30,11 +31,13 @@ public class ItemOrdemServico  implements Serializable{
 	private Integer id;
 	@NotEmpty(message = "Preenchimento obrigatório!")
 	private String equipamento;
+	@Lob
 	@NotEmpty(message = "Preenchimento obrigatório!")
-	@Length(min = 10, message = "Forneça uma descrição mais detalhada!") // Deve ser no minimo 100 caracteres (está 10 a efeito de testes)
+	@Length(min = 25, message = "Forneça uma descrição mais detalhada!")
 	private String descricao;
+	@Lob
 	@NotEmpty(message = "Preenchimento obrigatório!")
-	@Length(min = 2, message = "A avaria deve ser mais detalhada!") // Deve ser no minimo 25 caracteres (está 2 a efeito de testes)
+	@Length(min = 15, message = "A avaria deve ser mais detalhada!")
 	private String avaria;
 	private BigDecimal orcamento = BigDecimal.ZERO;
 	
