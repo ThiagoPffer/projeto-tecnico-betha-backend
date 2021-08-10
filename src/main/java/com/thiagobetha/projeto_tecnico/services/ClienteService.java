@@ -43,7 +43,7 @@ public class ClienteService {
 	
 	public Cliente findByEmail(String email) {
 		Cliente obj = repo.findByEmail(email);
-		if(obj.equals(null)) {
+		if(obj == null) {
 			throw new ObjectNotFoundException("Cliente com email "+email+" não encontrado!");
 		}
 		return obj;

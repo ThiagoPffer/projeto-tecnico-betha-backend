@@ -64,7 +64,7 @@ public class FuncionarioService {
 		}
 		
 		Funcionario obj = repo.findByEmail(email);
-		if(obj.equals(null)) {
+		if(obj == null) {
 			throw new ObjectNotFoundException("Funcionario com email "+email+" não encontrado!");
 		}
 		FuncionarioDTO objDTO = new FuncionarioDTO(obj);
