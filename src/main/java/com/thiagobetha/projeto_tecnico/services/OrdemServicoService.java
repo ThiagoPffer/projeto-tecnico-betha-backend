@@ -86,7 +86,6 @@ public class OrdemServicoService {
 		obj.setId(null);
 		atualizarValorTotal(obj);
 		repo.save(obj);
-		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
 	
