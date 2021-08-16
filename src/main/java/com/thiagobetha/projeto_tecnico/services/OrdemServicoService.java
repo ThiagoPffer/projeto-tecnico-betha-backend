@@ -2,7 +2,6 @@ package com.thiagobetha.projeto_tecnico.services;
 
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -205,7 +204,7 @@ public class OrdemServicoService {
 		}
 	}
 	
-	public URI uploadItensPictures(Integer id, Integer idItem, MultipartFile multipartFile) {
+	public ItemImagem uploadItensPictures(Integer id, Integer idItem, MultipartFile multipartFile) {
 		ItemOrdemServico item = itensRepo.findById(idItem)
 				.orElseThrow(() -> new ObjectNotFoundException("Item de id "+idItem+" não encontrado!"));
 
@@ -214,13 +213,15 @@ public class OrdemServicoService {
 		jpgImage = imageService.resize(jpgImage, size);
 		String fileName = prefix1 + idItem + prefix2 + item.getImagens().size() + ".jpg";
 		
-		URI uri = s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
-		ItemImagem itemImg = new ItemImagem(uri.toString(), item);
+		s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
+
+		ItemImagem itemImg = new ItemImagem(item, fileName);
 		item.addImagens(itemImg);
+		Integer indexImage = item.getImagens().indexOf(itemImg);
 		
-		itensRepo.save(item);
+		itemImg = itensRepo.save(item).getImagens().get(indexImage);
 		
-		return uri;
+		return itemImg;
 	}
 	
 	public void deleteItensPictures(Integer idImagem) {

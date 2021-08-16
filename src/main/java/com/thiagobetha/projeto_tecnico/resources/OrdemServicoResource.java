@@ -1,12 +1,14 @@
 package com.thiagobetha.projeto_tecnico.resources;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.thiagobetha.projeto_tecnico.domain.ItemImagem;
 import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
 import com.thiagobetha.projeto_tecnico.domain.enums.EstadoPagamento;
 import com.thiagobetha.projeto_tecnico.domain.enums.SituacaoOrdemServico;
@@ -32,6 +35,9 @@ public class OrdemServicoResource {
 	
 	@Autowired
 	private OrdemServicoService service;
+	
+	@Value("${img.default.url}")
+	private String imageUrl;
 
 	@PreAuthorize("hasAnyRole('TECNICO','RECEPCIONISTA', 'ADMIN')")
 	@RequestMapping(method = RequestMethod.GET)
@@ -73,12 +79,13 @@ public class OrdemServicoResource {
 	//upload de fotos
 	@PreAuthorize("hasAnyRole('TECNICO', 'ADMIN')")
 	@RequestMapping(value = "/{id}/itens/{idItem}/fotos", method = RequestMethod.POST)
-	public ResponseEntity<Void> insertPicture(
+	public ResponseEntity<ItemImagem> insertPicture(
 			@PathVariable Integer id, 
 			@PathVariable Integer idItem, 
-			@RequestParam(name = "file") MultipartFile file){
-		URI uri = service.uploadItensPictures(id, idItem, file);
-		return ResponseEntity.created(uri).build();
+			@RequestParam(name = "file") MultipartFile file) throws URISyntaxException{
+		ItemImagem itemImg = service.uploadItensPictures(id, idItem, file);
+		URI uri = new URI(imageUrl+itemImg.getNomeArquivo());
+		return ResponseEntity.created(uri).body(itemImg);
 	}
 	
 	//PUT para realizar alterações na ordem de serviço: ID do cliente e itens.

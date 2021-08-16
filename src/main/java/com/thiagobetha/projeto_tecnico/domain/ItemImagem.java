@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -19,8 +18,6 @@ public class ItemImagem implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@NotEmpty(message = "A url da imagem deve ser preenchida!")
-	private String uri;
 	private String nomeArquivo;
 	
 	@JsonIgnore
@@ -30,11 +27,10 @@ public class ItemImagem implements Serializable{
 
 	public ItemImagem() {}
 
-	public ItemImagem(String uri, ItemOrdemServico item) {
+	public ItemImagem(ItemOrdemServico item, String nomeArquivo) {
 		super();
-		this.uri = uri;
 		this.item = item;
-		this.nomeArquivo = uri.substring(58);
+		this.nomeArquivo = nomeArquivo;
 	}
 	
 	public Integer getId() {
@@ -43,14 +39,6 @@ public class ItemImagem implements Serializable{
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getUri() {
-		return uri;
-	}
-
-	public void setUri(String uri) {
-		this.uri = uri;
 	}
 
 	public String getNomeArquivo() {
