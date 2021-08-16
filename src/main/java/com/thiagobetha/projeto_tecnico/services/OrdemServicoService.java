@@ -54,8 +54,11 @@ public class OrdemServicoService {
 	@Autowired
 	private ImageService imageService;
 	
-	@Value("${img.prefix.item.ordemservico}")
-	private String prefix;
+	@Value("${img.prefix.item.ordemservico.1}")
+	private String prefix1;
+	
+	@Value("${img.prefix.item.ordemservico.2}")
+	private String prefix2;
 	
 	@Value("${img.default.size}")
 	private Integer size;
@@ -209,12 +212,12 @@ public class OrdemServicoService {
 		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
 		jpgImage = imageService.cropSquare(jpgImage);
 		jpgImage = imageService.resize(jpgImage, size);
-		String fileName = prefix + (itemImagensRepo.count()+1) + ".jpg";
+		String fileName = prefix1 + idItem + prefix2 + item.getImagens().size() + ".jpg";
 		
 		URI uri = s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
-		
 		ItemImagem itemImg = new ItemImagem(uri.toString(), item);
 		item.addImagens(itemImg);
+		
 		itensRepo.save(item);
 		
 		return uri;

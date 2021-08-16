@@ -19,6 +19,7 @@ import com.thiagobetha.projeto_tecnico.services.exceptions.FileException;
 @Service
 public class ImageService {
 	public BufferedImage getJpgImageFromFile(MultipartFile uploadedFile) {
+		
 		String ext = FilenameUtils.getExtension(uploadedFile.getOriginalFilename());
 		if (!"png".equals(ext) && !"jpg".equals(ext)) {
 			throw new FileException("Somente imagens PNG e JPG são permitidas");
@@ -26,6 +27,8 @@ public class ImageService {
 
 		try {
 			BufferedImage img = ImageIO.read(uploadedFile.getInputStream());
+			System.out.println("Nome do arquivo: " + uploadedFile.getOriginalFilename());
+			System.out.println("getInputStream: " + img);
 			if ("png".equals(ext)) {
 				img = pngToJpg(img);
 			}

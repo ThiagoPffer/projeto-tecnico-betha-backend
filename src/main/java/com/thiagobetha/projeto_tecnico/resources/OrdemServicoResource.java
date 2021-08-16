@@ -32,7 +32,8 @@ public class OrdemServicoResource {
 	
 	@Autowired
 	private OrdemServicoService service;
-	
+
+	@PreAuthorize("hasAnyRole('TECNICO','RECEPCIONISTA', 'ADMIN')")
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<OrdemServicoListDTO>> listAll() {	
 		List<OrdemServico> list = service.findAll();
@@ -40,6 +41,7 @@ public class OrdemServicoResource {
 		return ResponseEntity.ok().body(listDTO);
 	}
 	
+	@PreAuthorize("hasAnyRole('TECNICO','RECEPCIONISTA', 'ADMIN')")
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
 	public ResponseEntity<Page<OrdemServicoListDTO>> listPage(
 			@RequestParam(value="page", defaultValue = "0") Integer page, 
@@ -51,6 +53,7 @@ public class OrdemServicoResource {
 		return ResponseEntity.ok().body(listDTO);
 	}
 	
+	@PreAuthorize("hasAnyRole('TECNICO','RECEPCIONISTA', 'ADMIN')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<OrdemServico> getOne(@PathVariable Integer id) {
 		OrdemServico obj = service.findOne(id);
