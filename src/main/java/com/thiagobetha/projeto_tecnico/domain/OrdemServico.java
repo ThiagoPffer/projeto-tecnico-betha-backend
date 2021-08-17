@@ -90,11 +90,11 @@ public class OrdemServico implements Serializable{
 	}
 	
 	public void setValorTotal(BigDecimal orcamento) {
-		if(orcamento == BigDecimal.ZERO) {
-			this.valorTotal = orcamento;
-		} else {
-			this.valorTotal = valorTotal.add(orcamento);
-		}
+		this.valorTotal = valorTotal.add(orcamento);
+	}
+	
+	public void resetValorTotal() {
+		this.valorTotal = BigDecimal.ZERO;
 	}
 	
 	public Cliente getCliente() {

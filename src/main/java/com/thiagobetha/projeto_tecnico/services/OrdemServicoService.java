@@ -1,7 +1,6 @@
 package com.thiagobetha.projeto_tecnico.services;
 
 import java.awt.image.BufferedImage;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -143,6 +142,13 @@ public class OrdemServicoService {
 	
 	public OrdemServico fromDTO(OrdemServicoDTO newObj) {
 		Cliente cliente = clienteService.findOne(newObj.getIdCliente());
+		
+		newObj.getItens().forEach(item -> {
+			item.getImagens().forEach(imagemObj -> {
+				imagemObj.setItem(item);
+			});
+		});
+		
 		OrdemServico os = new OrdemServico(cliente);
 		os.setItens(newObj.getItens());
 		
@@ -155,7 +161,7 @@ public class OrdemServicoService {
 	
 	private void atualizarValorTotal(OrdemServico obj) {
 		List<ItemOrdemServico> list = obj.getItens();
-		obj.setValorTotal(BigDecimal.ZERO);
+		obj.resetValorTotal();
 		for(ItemOrdemServico item : list) {
 			obj.setValorTotal(item.getOrcamento());
 		}
