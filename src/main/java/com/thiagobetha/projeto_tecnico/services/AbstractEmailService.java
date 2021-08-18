@@ -57,7 +57,7 @@ public abstract class AbstractEmailService implements EmailService{
 				"\nA análise da sua ordem de serviço pelo técnico foi concluída!"+
 				"\nValor total a pagar: " +nf.format(obj.getValorTotal())+
 				"\nEscolha abaixo se deseja dar continuidade na manutenção ou cancelar a ordem: \n"+
-				"http://localhost:8080/ordensservico/"+obj.getId()+"/situacoes?value=CONCLUIDA \n"+
+				"http://localhost:8080/ordensservico/"+obj.getId()+"/situacoes?value=APROVADA \n"+
 				"http://localhost:8080/ordensservico/"+obj.getId()+"/situacoes?value=CANCELADA"+
 				"\nDados da ordem: \n"+
 				obj.toString()
