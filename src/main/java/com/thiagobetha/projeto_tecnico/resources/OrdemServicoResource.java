@@ -98,12 +98,12 @@ public class OrdemServicoResource {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PreAuthorize("hasAnyRole('TECNICO', 'ADMIN')")
-	@RequestMapping(value="/{id}/situacoes", method=RequestMethod.PUT)
+	@RequestMapping(value="/{id}/situacoes", method=RequestMethod.POST)
 	public ResponseEntity<Void> updateSituacao(
+			@Valid @RequestParam(value="token") String token, 
 			@Valid @RequestParam(value="value") SituacaoOrdemServico situacao, 
 			@PathVariable Integer id){
-		service.updateSituacao(situacao, id);
+		service.updateSituacao(token, situacao, id);
 		return ResponseEntity.noContent().build();
 	}
 	

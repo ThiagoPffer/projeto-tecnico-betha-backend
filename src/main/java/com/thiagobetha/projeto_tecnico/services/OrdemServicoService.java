@@ -24,6 +24,7 @@ import com.thiagobetha.projeto_tecnico.dto.OrdemServicoDTO;
 import com.thiagobetha.projeto_tecnico.repositories.ItemImagensRepository;
 import com.thiagobetha.projeto_tecnico.repositories.ItensRepository;
 import com.thiagobetha.projeto_tecnico.repositories.OrdemServicoRepository;
+import com.thiagobetha.projeto_tecnico.security.JWTUtil;
 import com.thiagobetha.projeto_tecnico.services.exceptions.DataIntegrityException;
 import com.thiagobetha.projeto_tecnico.services.exceptions.InvalidSituationException;
 import com.thiagobetha.projeto_tecnico.services.exceptions.ObjectNotFoundException;
@@ -51,6 +52,9 @@ public class OrdemServicoService {
 	
 	@Autowired
 	private ImageService imageService;
+	
+	@Autowired
+	private JWTUtil jwtUtil;
 	
 	@Value("${img.prefix.item.ordemservico.1}")
 	private String prefix1;
@@ -115,7 +119,11 @@ public class OrdemServicoService {
 	}
 	
 	@Transactional
-	public OrdemServico updateSituacao(SituacaoOrdemServico situacao, Integer id){
+	public OrdemServico updateSituacao(String token, SituacaoOrdemServico situacao, Integer id){
+		if(!jwtUtil.tokenValido(token)) {
+			throw new IllegalArgumentException("O token da requisição é inválido!");
+		}
+				
 		OrdemServico obj = findOne(id);
 		verificaSituacao(situacao, obj.getSituacao());
 		obj.setSituacao(situacao);
@@ -124,7 +132,7 @@ public class OrdemServicoService {
 			updateEstadoPagamento(EstadoPagamento.CANCELADO, id);
 		}
 		
-		sendEmail(obj);
+		sendEmail(obj, token);
 		return repo.save(obj);
 	}
 	
@@ -195,11 +203,11 @@ public class OrdemServicoService {
 
 	}
 	
-	private void sendEmail(OrdemServico obj) {
+	private void sendEmail(OrdemServico obj, String token) {
 		
 		switch(obj.getSituacao().getCod()) {
 			case 2: 
-				emailService.sendOrderConfirmationEmail(obj);
+				emailService.sendOrderConfirmationHtmlEmail(obj, token);
 				break;
 			case 4:
 				emailService.sendOrderConclusionEmail(obj);

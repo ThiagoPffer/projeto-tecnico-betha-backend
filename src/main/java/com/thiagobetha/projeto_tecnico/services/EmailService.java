@@ -1,5 +1,7 @@
 package com.thiagobetha.projeto_tecnico.services;
 
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.mail.SimpleMailMessage;
 
 import com.thiagobetha.projeto_tecnico.domain.Funcionario;
@@ -18,4 +20,10 @@ public interface EmailService {
 	void sendPasswordRequestEmail(Funcionario funcionario, String newPass);
 
 	void sendNewPasswordEmail(Funcionario funcionario, String newPass);
+	
+	// HTML:
+	
+	void sendOrderConfirmationHtmlEmail(OrdemServico obj, String token);
+
+	void sendHtmlEmail(MimeMessage msg);
 }

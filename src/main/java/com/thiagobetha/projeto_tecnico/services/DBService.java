@@ -41,15 +41,15 @@ public class DBService {
 		Endereco end1 = new Endereco(cli1, "Rua dos Correios Privatizados", "786", "Coloninha", "Araranguá", "Santa Catarina");
 		cli1.setEndereco(end1);
 		
-		Cliente cli2 = new Cliente("Maria", "mariatrdder@gmail.com", "48998223342");
+		Cliente cli2 = new Cliente("Maria", "thiago.piffer@unesc.net", "48998223342");
 		Endereco end2 = new Endereco(cli2, "Avenida Sete de Setembro", "1086", "Urussanguinha", "Araranguá", "Santa Catarina");
 		cli2.setEndereco(end2);
 		
-		Cliente cli3 = new Cliente("João", "joao@hotmail.com", "48998142352");
+		Cliente cli3 = new Cliente("João", "joaoemaildetestejoaojoaojoao@gmail.com", "48998142352");
 		Endereco end3 = new Endereco(cli3, "Rua dos Pinheiros", "203", "Centro", "Araranguá", "Santa Catarina");
 		cli3.setEndereco(end3);
 		
-		Cliente cli4 = new Cliente("Gabriel da Silva", "gbrlsilva@hotmail.com", "48998462533");
+		Cliente cli4 = new Cliente("Gabriel da Silva", "thiagopiffer7@gmail.com", "48998462533");
 		Endereco end4 = new Endereco(cli4, "Avenida Sete de Setembro", "203", "Centro", "Araranguá", "Santa Catarina");
 		cli4.setEndereco(end4);
 		
