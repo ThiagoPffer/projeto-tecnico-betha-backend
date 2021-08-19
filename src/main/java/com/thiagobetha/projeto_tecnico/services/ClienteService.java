@@ -57,7 +57,7 @@ public class ClienteService {
 	@Transactional
 	public Cliente insert(Cliente obj) {
 		Cliente auxObj = repo.findByEmail(obj.getEmail());
-		if(!auxObj.equals(null)) {
+		if(auxObj != null) {
 			throw new IllegalArgumentException("Email já existente!");
 		}
 		obj.setId(null);
@@ -68,7 +68,7 @@ public class ClienteService {
 	public Cliente update(Cliente newObj) {
 		findOne(newObj.getId());
 		Cliente auxObj = repo.findByEmail(newObj.getEmail());
-		if(!auxObj.equals(null) && !auxObj.getId().equals(newObj.getId())) {
+		if(auxObj != null && !auxObj.getId().equals(newObj.getId())) {
 			throw new IllegalArgumentException("Email já existente!");
 		}
 		/*
