@@ -23,9 +23,9 @@ import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class ItemOrdemServico  implements Serializable{
+public class ItemOrdemServico implements Serializable{
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -144,8 +144,7 @@ public class ItemOrdemServico  implements Serializable{
 		return true;
 	}
 
-	@Override
-	public String toString() {
+	public String toString(String amazonUrl) {
 		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 		StringBuilder builder = new StringBuilder();
 		builder.append("Equipamento: ");
@@ -156,6 +155,10 @@ public class ItemOrdemServico  implements Serializable{
 		builder.append(getAvaria());
 		builder.append("\nOrçamento: ");
 		builder.append(nf.format(getOrcamento()));
+		builder.append("\nImagens: ");
+		for(ItemImagem itemImg : getImagens()) {
+			builder.append(amazonUrl + itemImg.getNomeArquivo()+"\n");
+		}
 		return builder.toString();
 	}
 	

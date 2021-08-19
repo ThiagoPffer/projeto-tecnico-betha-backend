@@ -207,7 +207,8 @@ public class OrdemServicoService {
 		
 		switch(obj.getSituacao().getCod()) {
 			case 2: 
-				emailService.sendOrderConfirmationHtmlEmail(obj, token);
+				// emailService.sendOrderConfirmationHtmlEmail(obj, token);
+				emailService.sendOrderConfirmationEmail(obj, token);
 				break;
 			case 4:
 				emailService.sendOrderConclusionEmail(obj);

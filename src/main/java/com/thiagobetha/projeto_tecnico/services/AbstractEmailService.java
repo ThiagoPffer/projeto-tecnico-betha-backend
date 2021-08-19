@@ -1,8 +1,6 @@
 package com.thiagobetha.projeto_tecnico.services;
 
-import java.text.NumberFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -23,6 +21,9 @@ public abstract class AbstractEmailService implements EmailService{
 	@Value("${default.sender}")
 	private String sender;
 	
+	@Value("${img.default.url}")
+	private String amazonUrl;
+	
 	@Autowired
 	private TemplateEngine templateEngine;
 	
@@ -30,8 +31,8 @@ public abstract class AbstractEmailService implements EmailService{
 	private JavaMailSender javaMailSender;
 	
 	@Override
-	public void sendOrderConfirmationEmail(OrdemServico obj) {
-		SimpleMailMessage sm = prepareOrderConfirmationEmail(obj);
+	public void sendOrderConfirmationEmail(OrdemServico obj, String token) {
+		SimpleMailMessage sm = prepareOrderConfirmationEmail(obj, token);
 		sendEmail(sm);
 	}
 	
@@ -59,23 +60,25 @@ public abstract class AbstractEmailService implements EmailService{
 		sendEmail(sm);
 	}
 	
-	protected SimpleMailMessage prepareOrderConfirmationEmail(OrdemServico obj) {
-		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+	protected SimpleMailMessage prepareOrderConfirmationEmail(OrdemServico obj, String token) {
+		//NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(obj.getCliente().getEmail());
 		sm.setFrom(sender);
 		sm.setSubject("Análise da ordem de serviço finalizada! Número de ordem: " +obj.getId());
 		sm.setSentDate(new Date(System.currentTimeMillis()));
-		sm.setText(
+		/*sm.setText(
 				"Olá " +obj.getCliente().getNome()+"!"+
 				"\nA análise da sua ordem de serviço pelo técnico foi concluída!"+
 				"\nValor total a pagar: " +nf.format(obj.getValorTotal())+
 				"\nEscolha abaixo se deseja dar continuidade na manutenção ou cancelar a ordem: \n"+
-				"http://localhost:8080/ordensservico/"+obj.getId()+"/situacoes?value=APROVADA \n"+
-				"http://localhost:8080/ordensservico/"+obj.getId()+"/situacoes?value=CANCELADA"+
+				"http://localhost:8080/ordensservico/"+obj.getId()+"/situacoes?token="+token+"&value=APROVADA \n"+
+				"http://localhost:8080/ordensservico/"+obj.getId()+"/situacoes?token="+token+"&value=CANCELADA"+
 				"\nDados da ordem: \n"+
-				obj.toString()
+				obj.toString(amazonUrl)
 				);
+		*/
+		sm.setText(htmlFromTemplateOrdemServico(obj, token));
 		return sm;
 	}
 	
@@ -89,7 +92,7 @@ public abstract class AbstractEmailService implements EmailService{
 				"Olá " +obj.getCliente().getNome()+"!"+
 				"\nSua ordem de serviço foi concluída e seus itens estão disponíveis para retirada!"+
 				"\nDados da ordem: \n"+
-				obj.toString()
+				obj.toString(amazonUrl)
 				);
 		return sm;
 	}
@@ -104,7 +107,7 @@ public abstract class AbstractEmailService implements EmailService{
 				"Olá " +obj.getCliente().getNome()+"!"+
 				"\nSua solicitação de cancelamento da ordem de serviço foi confirmada e seus itens estão disponíveis para retirada!"+
 				"\nDados da ordem: \n"+
-				obj.toString()
+				obj.toString(amazonUrl)
 				);
 		return sm;
 	}
@@ -145,7 +148,7 @@ public abstract class AbstractEmailService implements EmailService{
 			MimeMessage mm = prepareMimeMessageOrderConfirmationEmail(obj, token);
 			sendHtmlEmail(mm);
 		} catch (MessagingException e) {
-			sendOrderConfirmationEmail(obj);
+			sendOrderConfirmationEmail(obj, token);
 		}
 	}
 

@@ -9,7 +9,7 @@ import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
 
 public interface EmailService {
 	
-	void sendOrderConfirmationEmail(OrdemServico obj);
+	void sendOrderConfirmationEmail(OrdemServico obj, String token);
 	
 	void sendOrderConclusionEmail(OrdemServico obj);
 	

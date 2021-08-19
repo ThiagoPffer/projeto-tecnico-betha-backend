@@ -138,8 +138,7 @@ public class OrdemServico implements Serializable{
 		return true;
 	}
 	
-	@Override
-	public String toString() {
+	public String toString(String amazonUrl) {
 		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 		StringBuilder builder = new StringBuilder();
 		builder.append("Número da ordem de serviço: ");
@@ -163,7 +162,7 @@ public class OrdemServico implements Serializable{
 		builder.append("\nEquipamentos cadastrados: \n");
 		
 		for(ItemOrdemServico item : getItens()) {
-			builder.append(item.toString()+"\n");
+			builder.append(item.toString(amazonUrl)+"\n");
 		}
 		
 		return builder.toString();
