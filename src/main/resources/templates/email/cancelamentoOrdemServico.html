@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title th:remove="all">Order Cancel</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            font-family: 'Roboto', 'sans-serif';
+        }
+
+        h3{
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .strong-text{
+            color: #131AF9;
+            font-weight: bold;
+        }
+
+        table,
+        table td,
+        table th{
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        table td,
+        table th{
+            padding: 5px 10px;
+        }
+
+        img{
+            display: inline-block;
+			margin-right: 10px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+	<div>
+		<h1>
+			Olá, <span th:text="${ordemServico.cliente.nome}"> </span>
+		</h1>
+        <h3>Confirmamos o cancelamento da sua ordem de serviço e os seus equipamentos estão disponíveis para devolução no balcão!</h3>
+
+        <h2>Dados da ordem: </h2>
+        <p>Número da Ordem de Servico: <span class="strong-text" th:text="${ordemServico.id}"></span></p>
+        <p>Nome do cliente: <span class="strong-text" th:text="${ordemServico.cliente.nome}"></span></p>
+        <p>Situação da ordem: <span class="strong-text" th:text="${ordemServico.situacao}"></span></p>
+        <p>Estado do pagamento: <span class="strong-text" th:text="${ordemServico.pagamento}"></span></p>
+        
+		<h2>Detalhes do pedido:</h2>
+		<table>
+			<tr>
+				<th>Equipamento</th>
+				<th>Descrição</th>
+				<th>Avaria</th>
+				<th>Orçamento</th>
+			</tr>
+			<tr th:each="item : ${ordemServico.itens}">
+				<td th:text="${item.equipamento}"></td>
+				<td th:text="${item.descricao}"></td>
+				<td th:text="${item.avaria}"></td>
+				<td><span class="strong-text">R$</span><span class="strong-text" th:text="${#numbers.formatDecimal(item.orcamento, 0, 'POINT', 2,
+                    'COMMA')}"></span></td>
+			</tr>
+		</table>
+        <p>Orçamento total: <span class="strong-text">R$</span><span class="strong-text" th:text="${#numbers.formatDecimal(ordemServico.valorTotal, 0, 'POINT', 2, 'COMMA')}"></span></p>
+
+        <h2>Fotos dos equipamentos</h2>
+
+        <div th:each="item : ${ordemServico.itens}">
+            <h3 th:text="${item.equipamento}"></h3>
+            <img width="200px" height="200px" th:each="imagem : ${item.imagens}" th:src="@{https://projeto-tecnico-thiago.s3.sa-east-1.amazonaws.com/}+${imagem.nomeArquivo}">
+        </div>
+	</div>
+</body>
+</html>

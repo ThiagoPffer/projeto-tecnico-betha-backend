@@ -62,6 +62,7 @@ public abstract class AbstractEmailService implements EmailService{
 		sendEmail(sm);
 	}
 	
+	// EMAIL DE APROVACAO/CANCELAMENTO DE ORDEM:
 	protected SimpleMailMessage prepareOrdemServicoConfirmationEmail(OrdemServico obj, String token) {
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(obj.getCliente().getEmail());
@@ -79,30 +80,22 @@ public abstract class AbstractEmailService implements EmailService{
 		sm.setFrom(sender);
 		sm.setSubject("Manutenção concluída! Número de ordem: " +obj.getId());
 		sm.setSentDate(new Date(System.currentTimeMillis()));
-		sm.setText(
-				"Olá " +obj.getCliente().getNome()+"!"+
-				"\nSua ordem de serviço foi concluída e seus itens estão disponíveis para retirada!"+
-				"\nDados da ordem: \n"+
-				obj.toString(amazonUrl)
-				);
+		sm.setText(htmlFromTemplateOrdemServicoConclusion(obj));
 		return sm;
 	}
 	
+	// EMAIL DE CANCELAMENTO DE ORDEM:
 	protected SimpleMailMessage prepareOrdemServicoCancelEmail(OrdemServico obj) {
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(obj.getCliente().getEmail());
 		sm.setFrom(sender);
 		sm.setSubject("Cancelamento de ordem de serviço confirmado! Número de ordem: " +obj.getId());
 		sm.setSentDate(new Date(System.currentTimeMillis()));
-		sm.setText(
-				"Olá " +obj.getCliente().getNome()+"!"+
-				"\nSua solicitação de cancelamento da ordem de serviço foi confirmada e seus itens estão disponíveis para retirada!"+
-				"\nDados da ordem: \n"+
-				obj.toString(amazonUrl)
-				);
+		sm.setText(htmlFromTemplateOrdemServicoCancel(obj));
 		return sm;
 	}
 	
+	// ENVIO DE EMAIL PARA MUDAR A SENHA
 	protected SimpleMailMessage preparePasswordRequestEmail(Funcionario funcionario, String token) {
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(funcionario.getEmail());
@@ -114,6 +107,7 @@ public abstract class AbstractEmailService implements EmailService{
 		return sm;
 	}
 	
+	// ENVIO DE NOVA SENHA
 	protected SimpleMailMessage prepareNewPasswordEmail(Funcionario funcionario, String newPass) {
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(funcionario.getEmail());
@@ -126,7 +120,6 @@ public abstract class AbstractEmailService implements EmailService{
 	
 	// ======= MIME MESSAGES / SMTP EMAIL ======= 
 	
-	// EMAIL DE APROVACAO/CANCELAMENTO DE ORDEM:
 	@Override
 	public void sendOrdemServicoConfirmationHtmlEmail(OrdemServico obj, String token) {
 		try {
@@ -136,7 +129,28 @@ public abstract class AbstractEmailService implements EmailService{
 			sendOrdemServicoConfirmationEmail(obj, token);
 		}
 	}
+
+	@Override
+	public void sendOrdemServicoConclusionHtmlEmail(OrdemServico obj) {
+		try {
+			MimeMessage mm = prepareMimeMessageOrdemServicoConclusionEmail(obj);
+			sendHtmlEmail(mm);
+		} catch (MessagingException e) {
+			sendOrdemServicoConclusionEmail(obj);
+		}
+	}
 	
+	@Override
+	public void sendOrdemServicoCancelHtmlEmail(OrdemServico obj) {
+		try {
+			MimeMessage mm = prepareMimeMessageOrdemServicoCancelEmail(obj);
+			sendHtmlEmail(mm);
+		} catch (MessagingException e) {
+			sendOrdemServicoCancelEmail(obj);
+		}
+	}
+	
+	// EMAIL DE APROVACAO/CANCELAMENTO DE ORDEM:
 	protected MimeMessage prepareMimeMessageOrdemServicoConfirmationEmail(OrdemServico obj, String token) throws MessagingException {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper mmh = new MimeMessageHelper(mimeMessage, true);
@@ -149,18 +163,8 @@ public abstract class AbstractEmailService implements EmailService{
 		
 		return mimeMessage;
 	}
-
-	// EMAIL DE CONCLUSAO DE ORDEM:
-	@Override
-	public void sendOrdemServicoConclusionHtmlEmail(OrdemServico obj) {
-		try {
-			MimeMessage mm = prepareMimeMessageOrdemServicoConclusionEmail(obj);
-			sendHtmlEmail(mm);
-		} catch (MessagingException e) {
-			sendOrdemServicoConclusionEmail(obj);
-		}
-	}
 	
+	// EMAIL DE CONCLUSAO DE ORDEM:
 	protected MimeMessage prepareMimeMessageOrdemServicoConclusionEmail(OrdemServico obj) throws MessagingException {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper mmh = new MimeMessageHelper(mimeMessage, true);
@@ -175,16 +179,6 @@ public abstract class AbstractEmailService implements EmailService{
 	}
 	
 	// EMAIL DE CANCELAMENTO DE ORDEM:
-	@Override
-	public void sendOrdemServicoCancelHtmlEmail(OrdemServico obj) {
-		try {
-			MimeMessage mm = prepareMimeMessageOrdemServicoCancelEmail(obj);
-			sendHtmlEmail(mm);
-		} catch (MessagingException e) {
-			sendOrdemServicoCancelEmail(obj);
-		}
-	}
-	
 	protected MimeMessage prepareMimeMessageOrdemServicoCancelEmail(OrdemServico obj) throws MessagingException {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper mmh = new MimeMessageHelper(mimeMessage, true);
