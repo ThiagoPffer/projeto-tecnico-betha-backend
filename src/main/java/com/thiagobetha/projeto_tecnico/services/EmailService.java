@@ -9,21 +9,25 @@ import com.thiagobetha.projeto_tecnico.domain.OrdemServico;
 
 public interface EmailService {
 	
-	void sendOrderConfirmationEmail(OrdemServico obj, String token);
+	void sendOrdemServicoConfirmationEmail(OrdemServico obj, String token);
 	
-	void sendOrderConclusionEmail(OrdemServico obj);
+	void sendOrdemServicoConclusionEmail(OrdemServico obj);
 	
-	void sendCancellationConfirmationEmail(OrdemServico obj);
-	
-	void sendEmail(SimpleMailMessage msg);
+	void sendOrdemServicoCancelEmail(OrdemServico obj);
 	
 	void sendPasswordRequestEmail(Funcionario funcionario, String newPass);
 
 	void sendNewPasswordEmail(Funcionario funcionario, String newPass);
 	
+	void sendEmail(SimpleMailMessage msg);
+	
 	// HTML:
 	
-	void sendOrderConfirmationHtmlEmail(OrdemServico obj, String token);
+	void sendOrdemServicoConfirmationHtmlEmail(OrdemServico obj, String token);
 
+	void sendOrdemServicoConclusionHtmlEmail(OrdemServico obj);
+	
+	void sendOrdemServicoCancelHtmlEmail(OrdemServico obj);
+	
 	void sendHtmlEmail(MimeMessage msg);
 }

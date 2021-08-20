@@ -208,13 +208,13 @@ public class OrdemServicoService {
 		switch(obj.getSituacao().getCod()) {
 			case 2: 
 				// emailService.sendOrderConfirmationHtmlEmail(obj, token);
-				emailService.sendOrderConfirmationEmail(obj, token);
+				emailService.sendOrdemServicoConfirmationEmail(obj, token);
 				break;
 			case 4:
-				emailService.sendOrderConclusionEmail(obj);
+				emailService.sendOrdemServicoConclusionEmail(obj);
 				break;
 			case 5:
-				emailService.sendCancellationConfirmationEmail(obj);
+				emailService.sendOrdemServicoCancelEmail(obj);
 				break;
 		}
 	}

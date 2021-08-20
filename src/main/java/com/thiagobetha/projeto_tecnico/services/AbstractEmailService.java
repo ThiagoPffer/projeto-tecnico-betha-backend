@@ -30,21 +30,23 @@ public abstract class AbstractEmailService implements EmailService{
 	@Autowired
 	private JavaMailSender javaMailSender;
 	
+	// ======= SIMPLE MAIL MESSAGE / MOCK EMAIL =======
+	
 	@Override
-	public void sendOrderConfirmationEmail(OrdemServico obj, String token) {
-		SimpleMailMessage sm = prepareOrderConfirmationEmail(obj, token);
+	public void sendOrdemServicoConfirmationEmail(OrdemServico obj, String token) {
+		SimpleMailMessage sm = prepareOrdemServicoConfirmationEmail(obj, token);
 		sendEmail(sm);
 	}
 	
 	@Override
-	public void sendOrderConclusionEmail(OrdemServico obj) {
-		SimpleMailMessage sm = prepareOrderConclusionEmail(obj);
+	public void sendOrdemServicoConclusionEmail(OrdemServico obj) {
+		SimpleMailMessage sm = prepareOrdemServicoConclusionEmail(obj);
 		sendEmail(sm);
 	}
 	
 	@Override
-	public void sendCancellationConfirmationEmail(OrdemServico obj) {
-		SimpleMailMessage sm = prepareCancellationConfirmationEmail(obj);
+	public void sendOrdemServicoCancelEmail(OrdemServico obj) {
+		SimpleMailMessage sm = prepareOrdemServicoCancelEmail(obj);
 		sendEmail(sm);
 	}
 	
@@ -60,29 +62,18 @@ public abstract class AbstractEmailService implements EmailService{
 		sendEmail(sm);
 	}
 	
-	protected SimpleMailMessage prepareOrderConfirmationEmail(OrdemServico obj, String token) {
-		//NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+	protected SimpleMailMessage prepareOrdemServicoConfirmationEmail(OrdemServico obj, String token) {
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(obj.getCliente().getEmail());
 		sm.setFrom(sender);
 		sm.setSubject("Análise da ordem de serviço finalizada! Número de ordem: " +obj.getId());
 		sm.setSentDate(new Date(System.currentTimeMillis()));
-		/*sm.setText(
-				"Olá " +obj.getCliente().getNome()+"!"+
-				"\nA análise da sua ordem de serviço pelo técnico foi concluída!"+
-				"\nValor total a pagar: " +nf.format(obj.getValorTotal())+
-				"\nEscolha abaixo se deseja dar continuidade na manutenção ou cancelar a ordem: \n"+
-				"http://localhost:8080/ordensservico/"+obj.getId()+"/situacoes?token="+token+"&value=APROVADA \n"+
-				"http://localhost:8080/ordensservico/"+obj.getId()+"/situacoes?token="+token+"&value=CANCELADA"+
-				"\nDados da ordem: \n"+
-				obj.toString(amazonUrl)
-				);
-		*/
-		sm.setText(htmlFromTemplateOrdemServico(obj, token));
+		sm.setText(htmlFromTemplateOrdemServicoConfirmation(obj, token));
 		return sm;
 	}
-	
-	protected SimpleMailMessage prepareOrderConclusionEmail(OrdemServico obj) {
+
+	// EMAIL DE CONCLUSAO DE ORDEM:
+	protected SimpleMailMessage prepareOrdemServicoConclusionEmail(OrdemServico obj) {
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(obj.getCliente().getEmail());
 		sm.setFrom(sender);
@@ -97,7 +88,7 @@ public abstract class AbstractEmailService implements EmailService{
 		return sm;
 	}
 	
-	protected SimpleMailMessage prepareCancellationConfirmationEmail(OrdemServico obj) {
+	protected SimpleMailMessage prepareOrdemServicoCancelEmail(OrdemServico obj) {
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(obj.getCliente().getEmail());
 		sm.setFrom(sender);
@@ -133,26 +124,20 @@ public abstract class AbstractEmailService implements EmailService{
 		return sm;
 	}
 	
-	// EMAIL HTML:
+	// ======= MIME MESSAGES / SMTP EMAIL ======= 
 	
-	protected String htmlFromTemplateOrdemServico(OrdemServico obj, String token) {
-		Context context = new Context();
-		context.setVariable("ordemServico", obj);
-		context.setVariable("token", token);
-		return templateEngine.process("email/confirmacaoOrdemServico", context);
-	}
-	
+	// EMAIL DE APROVACAO/CANCELAMENTO DE ORDEM:
 	@Override
-	public void sendOrderConfirmationHtmlEmail(OrdemServico obj, String token) {
+	public void sendOrdemServicoConfirmationHtmlEmail(OrdemServico obj, String token) {
 		try {
-			MimeMessage mm = prepareMimeMessageOrderConfirmationEmail(obj, token);
+			MimeMessage mm = prepareMimeMessageOrdemServicoConfirmationEmail(obj, token);
 			sendHtmlEmail(mm);
 		} catch (MessagingException e) {
-			sendOrderConfirmationEmail(obj, token);
+			sendOrdemServicoConfirmationEmail(obj, token);
 		}
 	}
-
-	protected MimeMessage prepareMimeMessageOrderConfirmationEmail(OrdemServico obj, String token) throws MessagingException {
+	
+	protected MimeMessage prepareMimeMessageOrdemServicoConfirmationEmail(OrdemServico obj, String token) throws MessagingException {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper mmh = new MimeMessageHelper(mimeMessage, true);
 
@@ -160,9 +145,77 @@ public abstract class AbstractEmailService implements EmailService{
 		mmh.setFrom(sender);
 		mmh.setSubject("Análise da ordem de serviço finalizada! Número de ordem: " +obj.getId());
 		mmh.setSentDate(new Date(System.currentTimeMillis()));
-		mmh.setText(htmlFromTemplateOrdemServico(obj, token), true);
+		mmh.setText(htmlFromTemplateOrdemServicoConfirmation(obj, token), true);
+		
+		return mimeMessage;
+	}
+
+	// EMAIL DE CONCLUSAO DE ORDEM:
+	@Override
+	public void sendOrdemServicoConclusionHtmlEmail(OrdemServico obj) {
+		try {
+			MimeMessage mm = prepareMimeMessageOrdemServicoConclusionEmail(obj);
+			sendHtmlEmail(mm);
+		} catch (MessagingException e) {
+			sendOrdemServicoConclusionEmail(obj);
+		}
+	}
+	
+	protected MimeMessage prepareMimeMessageOrdemServicoConclusionEmail(OrdemServico obj) throws MessagingException {
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mmh = new MimeMessageHelper(mimeMessage, true);
+
+		mmh.setTo(obj.getCliente().getEmail());
+		mmh.setFrom(sender);
+		mmh.setSubject("Manutenção concluída! Número de ordem: " +obj.getId());
+		mmh.setSentDate(new Date(System.currentTimeMillis()));
+		mmh.setText(htmlFromTemplateOrdemServicoConclusion(obj), true);
 		
 		return mimeMessage;
 	}
 	
+	// EMAIL DE CANCELAMENTO DE ORDEM:
+	@Override
+	public void sendOrdemServicoCancelHtmlEmail(OrdemServico obj) {
+		try {
+			MimeMessage mm = prepareMimeMessageOrdemServicoCancelEmail(obj);
+			sendHtmlEmail(mm);
+		} catch (MessagingException e) {
+			sendOrdemServicoCancelEmail(obj);
+		}
+	}
+	
+	protected MimeMessage prepareMimeMessageOrdemServicoCancelEmail(OrdemServico obj) throws MessagingException {
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mmh = new MimeMessageHelper(mimeMessage, true);
+
+		mmh.setTo(obj.getCliente().getEmail());
+		mmh.setFrom(sender);
+		mmh.setSubject("Cancelamento de ordem de serviço confirmado! Número de ordem: " +obj.getId());
+		mmh.setSentDate(new Date(System.currentTimeMillis()));
+		mmh.setText(htmlFromTemplateOrdemServicoCancel(obj), true);
+		
+		return mimeMessage;
+	}
+	
+	// ======= HTML TEMPLATES =======
+	
+	protected String htmlFromTemplateOrdemServicoConfirmation(OrdemServico obj, String token) {
+		Context context = new Context();
+		context.setVariable("ordemServico", obj);
+		context.setVariable("token", token);
+		return templateEngine.process("email/confirmacaoOrdemServico", context);
+	}
+	
+	protected String htmlFromTemplateOrdemServicoConclusion(OrdemServico obj) {
+		Context context = new Context();
+		context.setVariable("ordemServico", obj);
+		return templateEngine.process("email/conclusaoOrdemServico", context);
+	}
+	
+	protected String htmlFromTemplateOrdemServicoCancel(OrdemServico obj) {
+		Context context = new Context();
+		context.setVariable("ordemServico", obj);
+		return templateEngine.process("email/cancelamentoOrdemServico", context);
+	}
 }
