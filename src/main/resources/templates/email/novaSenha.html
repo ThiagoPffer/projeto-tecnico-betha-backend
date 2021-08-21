@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title th:remove="all">New password</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            font-family: 'Roboto', 'sans-serif';
+        }
+
+        h3{
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .strong-text{
+            color: #131AF9;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+	<div>
+		<h1>
+			Olá, <span class="strong-text" th:text="${funcionario.nome}"> </span>
+		</h1>
+        <h3>Sua nova senha é <span class="strong-text" th:text="${newPass}"></span></h3>
+	</div>
+</body>
+</html>

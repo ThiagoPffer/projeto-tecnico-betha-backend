@@ -43,11 +43,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private static final String[] PUBLIC_MATCHERS_POST = {
 			"/auth/forgot/**",
+			"/auth/newpassword/**",
 			"/ordensservico/**"
 	};
 	
 	private static final String[] PUBLIC_MATCHERS_PUT = {//NOVO
-			"/auth/newpassword/**"
+			
 	};
 	
 	@Override

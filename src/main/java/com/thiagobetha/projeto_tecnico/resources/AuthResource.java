@@ -52,7 +52,7 @@ public class AuthResource {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@RequestMapping(value="/newpassword", method=RequestMethod.PUT)
+	@RequestMapping(value="/newpassword", method=RequestMethod.POST)
 	public ResponseEntity<Void> updatePass(@Valid @RequestParam(value="token") String token){
 		service.setNewPassword(token);
 		return ResponseEntity.noContent().build();

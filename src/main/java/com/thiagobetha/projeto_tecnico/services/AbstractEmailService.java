@@ -102,8 +102,9 @@ public abstract class AbstractEmailService implements EmailService{
 		sm.setFrom(sender);
 		sm.setSubject("Solicitação de nova senha");
 		sm.setSentDate(new Date(System.currentTimeMillis()));
-		sm.setText("Clique para mudar a senha: \n" 
-		+ "http://localhost:8080/auth/newpassword?token=" + token);
+		/*sm.setText("Clique para mudar a senha: \n" 
+		+ "http://localhost:8080/auth/newpassword?token=" + token);*/
+		sm.setText(htmlFromTemplateNewPasswordRequest(funcionario, token));
 		return sm;
 	}
 	
@@ -114,7 +115,7 @@ public abstract class AbstractEmailService implements EmailService{
 		sm.setFrom(sender);
 		sm.setSubject("Solicitação de nova senha");
 		sm.setSentDate(new Date(System.currentTimeMillis()));
-		sm.setText("Nova senha: " + newPass);
+		sm.setText(htmlFromTemplateNewPassword(funcionario, newPass));
 		return sm;
 	}
 	
@@ -211,5 +212,19 @@ public abstract class AbstractEmailService implements EmailService{
 		Context context = new Context();
 		context.setVariable("ordemServico", obj);
 		return templateEngine.process("email/cancelamentoOrdemServico", context);
+	}
+	
+	protected String htmlFromTemplateNewPasswordRequest(Funcionario funcionario, String token) {
+		Context context = new Context();
+		context.setVariable("funcionario", funcionario);
+		context.setVariable("token", token);
+		return templateEngine.process("email/requestNovaSenha", context);
+	}
+	
+	protected String htmlFromTemplateNewPassword(Funcionario funcionario, String newPass) {
+		Context context = new Context();
+		context.setVariable("funcionario", funcionario);
+		context.setVariable("newPass", newPass);
+		return templateEngine.process("email/novaSenha", context);
 	}
 }

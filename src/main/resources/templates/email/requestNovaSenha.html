@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title th:remove="all">New password request</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            font-family: 'Roboto', 'sans-serif';
+        }
+
+        h3{
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        form{
+            display: inline-block;
+        }
+
+        .strong-text{
+            color: #131AF9;
+            font-weight: bold;
+        }
+
+        .button{
+            padding: 15px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            text-decoration: none;
+            margin-right: 15px;
+            width: 250px;
+            border: 0;
+            cursor: pointer;
+            background: #131AF9;
+        }
+
+
+    </style>
+</head>
+
+<body>
+	<div>
+		<h1>
+			Olá, <span class="strong-text" th:text="${funcionario.nome}"> </span>
+		</h1>
+        <h3>Clique no botão abaixo para alterar a sua senha!</h3>
+        <h3>Após o acesso você estará recebendo um outro email com a nova senha:</h3>
+        <form th:action="@{http://localhost:8080/auth/newpassword?token=}+${token}" method="POST" target="blank">
+            <input type="submit" class="button" value="Alterar senha">
+        </form>
+	</div>
+</body>
+</html>
