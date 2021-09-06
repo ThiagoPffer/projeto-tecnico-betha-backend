@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.thiagobetha.projeto_tecnico.services.DBService;
+import com.thiagobetha.projeto_tecnico.services.EmailService;
+import com.thiagobetha.projeto_tecnico.services.MockEmailService;
 
 @Configuration
 @Profile("dev")
@@ -28,4 +30,10 @@ public class DevConfig {
 		dbService.instantiateTestDatabase();		
 		return true;
 	}
+	
+	@Bean
+	public EmailService emailService() {
+		return new MockEmailService();
+	}
+	
 }
