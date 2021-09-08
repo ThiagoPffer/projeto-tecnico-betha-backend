@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
@@ -31,11 +31,11 @@ public class ItemOrdemServico implements Serializable{
 	private Integer id;
 	@NotEmpty(message = "Preenchimento obrigatório!")
 	private String equipamento;
-	@Lob
+	@Column(columnDefinition="TEXT")
 	@NotEmpty(message = "Preenchimento obrigatório!")
 	@Length(min = 25, message = "Forneça uma descrição mais detalhada!")
 	private String descricao;
-	@Lob
+	@Column(columnDefinition="TEXT")
 	@NotEmpty(message = "Preenchimento obrigatório!")
 	@Length(min = 15, message = "A avaria deve ser mais detalhada!")
 	private String avaria;
